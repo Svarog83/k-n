@@ -10,8 +10,8 @@ ignore_user_abort( TRUE );
 $not_auth       = false;
 $auth_verified  = false;
 
-$GS->uid        = trim( Request::getVar( 'user_uid', '', 'session' ) );
-$GS->user       = intval( Request::getVar( 'user_id', 0, 'session' ) );
+$AC->uid        = trim( Request::getVar( 'user_uid', '', 'session' ) );
+$AC->user       = intval( Request::getVar( 'user_id', 0, 'session' ) );
 
 $pager_update   = (int)Request::getVar( 'pager_update', 0 );
 $change_lang    = (string)Request::getVar( 'change_lang', '' );
@@ -24,9 +24,9 @@ $check_ip           = TRUE;
 $timeout_flag       = FALSE;
 $count_user         = 0;
 
-$DB = Loader::DB( $GS->db_main_settings );
+$DB = Loader::DB( $AC->db_main_settings );
 
-if ( $GS->uid && $GS->user )
+if ( $AC->uid && $AC->user )
 {
     $query = "
         SELECT
@@ -34,8 +34,8 @@ if ( $GS->uid && $GS->user )
         FROM
     userh
         WHERE
-    uid	= '" . mysql_real_escape_string( $GS->uid ) . "' &&
-    id = '" . mysql_real_escape_string( $GS->user ) . "'
+    uid	= '" . mysql_real_escape_string( $AC->uid ) . "' &&
+    id = '" . mysql_real_escape_string( $AC->user ) . "'
     ";
     $DB->query( $query, __FILE__, __LINE__ );
 
@@ -43,17 +43,17 @@ if ( $GS->uid && $GS->user )
 
     $row = $DB->get_fetch_ass();
 
-    if ( $count_main && ( $time - $row['time'] < $GS->time_limit * 60 * 60 ) ) // если есть во временной таблице
+    if ( $count_main && ( $time - $row['time'] < $AC->time_limit * 60 * 60 ) ) // если есть во временной таблице
     {
         ///////////////////////////////////////////////////////////////////
         ///  выбираем доступ к соответствующей базе данных	++++++++++++++
 
         if (
-            isset ( $_COOKIE['rems_ssid' . $GS->uid] ) &&
+            isset ( $_COOKIE['rems_ssid' . $AC->uid] ) &&
             (
-                md5( $_COOKIE['rems_ssid' . $GS->uid] ) == $row['checksum'] ||
+                md5( $_COOKIE['rems_ssid' . $AC->uid] ) == $row['checksum'] ||
                     (
-                        !isset( $_COOKIE['rems_ssid' . $GS->uid] ) &&
+                        !isset( $_COOKIE['rems_ssid' . $AC->uid] ) &&
                         !$row['checksum']
                     )
              )
@@ -63,7 +63,7 @@ if ( $GS->uid && $GS->user )
             $DB->query( $query, __FILE__, __LINE__ );
             $row = $DB->get_fetch_ass();
 
-	        $GS->db_settings = array (
+	        $AC->db_settings = array (
 		    'db_id'         => $row['id'],
 			'db_host'	    => $row['db_host_name'],
 			'db_name'		=> $row['db_name'],
@@ -73,10 +73,10 @@ if ( $GS->uid && $GS->user )
 			'db_charset'    => $row['db_charset'] );
 
             /* Encoding */
-            $GS->DBCharset = $row['db_charset'];
-	        $GS->Charset = ( $GS->DBCharset == 'utf8' ? 'utf-8' : 'windows-1251' );
+            $AC->DBCharset = $row['db_charset'];
+	        $AC->Charset = ( $AC->DBCharset == 'utf8' ? 'utf-8' : 'windows-1251' );
 
-            $DB = Loader::DB ( $GS->db_settings, 'reconnect' );
+            $DB = Loader::DB ( $AC->db_settings, 'reconnect' );
 
             /*Select the user details from the database*/
             $query = "
@@ -85,8 +85,8 @@ if ( $GS->uid && $GS->user )
                 FROM
             user
                 WHERE
-            user_uid	= '" . mysql_real_escape_string( $GS->uid ) . "' &&
-            user_id		= '" . mysql_real_escape_string( $GS->user ) . "' &&
+            user_uid	= '" . mysql_real_escape_string( $AC->uid ) . "' &&
+            user_id		= '" . mysql_real_escape_string( $AC->user ) . "' &&
             user_activ	IN ( 'a' )
             ";
             $DB->query( $query, __FILE__, __LINE__ );
@@ -106,8 +106,8 @@ if ( $GS->uid && $GS->user )
 		         FROM
 		     z_cookie_err
     			WHERE
-			 zce_user        = '". $GS->user ."' &&
-			 zce_cookie      = '". ( isset ( $_COOKIE['rems_ssid'. $GS->uid] ) ? $_COOKIE['rems_ssid'. $GS->uid] : '' ) ."' &&
+			 zce_user        = '". $AC->user ."' &&
+			 zce_cookie      = '". ( isset ( $_COOKIE['rems_ssid'. $AC->uid] ) ? $_COOKIE['rems_ssid'. $AC->uid] : '' ) ."' &&
 			 zce_cookie_s    = '". $row['checksum2'] ."' &&
 			 zce_ip          = '". $_SERVER['REMOTE_ADDR'] ."' &&
 			 zce_agent       = '". $_SERVER['HTTP_USER_AGENT'] ."' &&
@@ -124,8 +124,8 @@ if ( $GS->uid && $GS->user )
 				zce_count = zce_count + 1,
 				zce_time = '" . time( ) . "'
     				WHERE
-				zce_user        ='" . mysql_real_escape_string( $GS->user ) . "' &&
-				zce_cookie      ='" . mysql_real_escape_string( isset ( $_COOKIE['rems_ssid' . $GS->uid] ) ? $_COOKIE['rems_ssid' . $GS->uid] : '' ) . "' &&
+				zce_user        ='" . mysql_real_escape_string( $AC->user ) . "' &&
+				zce_cookie      ='" . mysql_real_escape_string( isset ( $_COOKIE['rems_ssid' . $AC->uid] ) ? $_COOKIE['rems_ssid' . $AC->uid] : '' ) . "' &&
 				zce_cookie_s    ='" . mysql_real_escape_string( $row['checksum2'] ) . "' &&
 				zce_ip          ='" . mysql_real_escape_string( $_SERVER['REMOTE_ADDR'] ) . "' &&
 				zce_agent       ='" . mysql_real_escape_string( $_SERVER['HTTP_USER_AGENT'] ) . "'&&
@@ -138,9 +138,9 @@ if ( $GS->uid && $GS->user )
     				INSERT INTO
 				z_cookie_err
     				SET
-				zce_user        ='" . mysql_real_escape_string(  $GS->user ) . "',
+				zce_user        ='" . mysql_real_escape_string(  $AC->user ) . "',
 				zce_count       = 0,
-				zce_cookie      ='" . mysql_real_escape_string( isset ( $_COOKIE['rems_ssid' . $GS->uid] ) ? $_COOKIE['rems_ssid' . $GS->uid] : '' ) . "',
+				zce_cookie      ='" . mysql_real_escape_string( isset ( $_COOKIE['rems_ssid' . $AC->uid] ) ? $_COOKIE['rems_ssid' . $AC->uid] : '' ) . "',
 				zce_cookie_s    ='" . mysql_real_escape_string( $row['checksum2'] ) . "',
 				zce_ip          ='" . mysql_real_escape_string( $_SERVER['REMOTE_ADDR'] ) . "',
 				zce_agent       ='" . mysql_real_escape_string( $_SERVER['HTTP_USER_AGENT'] ) . "',
@@ -178,7 +178,7 @@ if ( $GS->uid && $GS->user )
 
         foreach ( $arr_db as $v )
         {
-            $GS->db_settings = array (
+            $AC->db_settings = array (
 			'db_host'	=> $v['h'],
 			'db_name'		=> $v['n'],
 			'db_user_name'	=> $v['u'],
@@ -186,22 +186,22 @@ if ( $GS->uid && $GS->user )
 			'db_port' => $v['prt'],
 			'db_charset' => $v['c'] );
 
-			$DB = Loader::DB( $GS->db_settings, 'reconnect' );
+			$DB = Loader::DB( $AC->db_settings, 'reconnect' );
 
-            $query = "SELECT * FROM user WHERE user_uid	= '" . $GS->uid . "' && user_id = '" . $GS->user . "' && user_activ	IN ( 'a' )";
+            $query = "SELECT * FROM user WHERE user_uid	= '" . $AC->uid . "' && user_id = '" . $AC->user . "' && user_activ	IN ( 'a' )";
             $DB->query( $query, __FILE__, __LINE__ );
 
             $count_user = $DB->get_num_rows();
 
             if ( $count_user )
             {
-                $GS->db_settings['db_id'] = $v['id'];
+                $AC->db_settings['db_id'] = $v['id'];
 	            break;
             }
 
         }
 
-		$DB = Loader::DB ( $GS->db_main_settings, 'reconnect' );
+		$DB = Loader::DB ( $AC->db_main_settings, 'reconnect' );
 
         //// если нашли юзера на какой-либо базе
 
@@ -209,18 +209,18 @@ if ( $GS->uid && $GS->user )
         {
             $UA = $DB->get_fetch_ass();
 
-            if ( $time - $UA['user_date'] < 60 * 60 * $GS->time_limit )
+            if ( $time - $UA['user_date'] < 60 * 60 * $AC->time_limit )
             {
-                $query = "DELETE FROM userh WHERE id = '" . $GS->user . "' && db = '" . $GS->db_settings['db_id'] . "'";
+                $query = "DELETE FROM userh WHERE id = '" . $AC->user . "' && db = '" . $AC->db_settings['db_id'] . "'";
                 $DB->query( $query, __FILE__, __LINE__ );
 
                 $query = "
 					INSERT INTO
 			    userh
 					SET
-				id		= '" . $GS->user . "',
-				uid		= '" . $GS->uid . "',
-				db		= '" . $GS->db_settings['db_id'] . "',
+				id		= '" . $AC->user . "',
+				uid		= '" . $AC->uid . "',
+				db		= '" . $AC->db_settings['db_id'] . "',
 				time	= '" . time( ) . "'";
                 $DB->query( $query, __FILE__, __LINE__ );
 
@@ -231,13 +231,13 @@ if ( $GS->uid && $GS->user )
 
 	        if ( !$done_insert_main && !$pager_update )
 			{
-				$query = "UPDATE userh SET time = '" . time() . "' WHERE id = '" . $GS->user . "'";
+				$query = "UPDATE userh SET time = '" . time() . "' WHERE id = '" . $AC->user . "'";
 				$DB->query( $query, __FILE__, __LINE__ );
 			}
         }
     }
 
-	$DB = Loader::DB ( $GS->db_settings, 'reconnect' );
+	$DB = Loader::DB ( $AC->db_settings, 'reconnect' );
 
     if ( $count_user == 1 && !$timeout_flag )
     {
@@ -251,7 +251,7 @@ if ( $GS->uid && $GS->user )
 
         if ( $change_lang )
         {
-            $query = "UPDATE user SET user_lang='" . $change_lang . "' WHERE user_id = '" . $GS->user . "'";
+            $query = "UPDATE user SET user_lang='" . $change_lang . "' WHERE user_id = '" . $AC->user . "'";
             $DB->query( $query, __FILE__, __LINE__ );
             $UL = $change_lang;
         }
@@ -295,7 +295,7 @@ if ( $GS->uid && $GS->user )
         {
             $ADMIN_ACTION = TRUE;
 
-	        GlobalSetup::getInstance()->super_admin_flag = true;
+	        AppConfig::getIns()->admin_flag = true;
 
             $query = "
 				SELECT
@@ -327,7 +327,7 @@ if ( $GS->uid && $GS->user )
         //// проверка времени работы в РЕМСе
         $user_date = time( );
 
-        if ( $user_date - $UA['user_date'] < ( 60 * 60 * $GS->time_limit ) && $user_date - $UA['user_date'] > ( 60 * 60 * $GS->time_limit_update ) )
+        if ( $user_date - $UA['user_date'] < ( 60 * 60 * $AC->time_limit ) && $user_date - $UA['user_date'] > ( 60 * 60 * $AC->time_limit_update ) )
         {
             $limit_time = TRUE;
 
@@ -338,7 +338,7 @@ if ( $GS->uid && $GS->user )
             }
 
         }
-        elseif ( $user_date - $UA['user_date'] > ( 60 * 60 * $GS->time_limit ) )
+        elseif ( $user_date - $UA['user_date'] > ( 60 * 60 * $AC->time_limit ) )
             $limit_time = FALSE;
         else
             $limit_time = TRUE;
@@ -349,7 +349,7 @@ if ( $GS->uid && $GS->user )
 /*
 /////////////////////////////////////////
 echo "count_user<br>".$count_user."<br><br>";
-echo "uid<br>".$GS->uid."<br><br>";
+echo "uid<br>".$AC->uid."<br><br>";
 echo "check_ip<br>".$check_ip."<br><br>";
 echo "limit_time<br>".$limit_time."<br><br>";
 flush();
@@ -361,12 +361,12 @@ if ( ( !$limit_time || $count_user != 1 ) && isset ( $pager_update ) && $pager_u
 {
     $return_arr['time_out'] = 1;
 }
-else if ( ( $count_user != 1 || !$GS->uid || !$check_ip || !$limit_time ) )
+else if ( ( $count_user != 1 || !$AC->uid || !$check_ip || !$limit_time ) )
 {
 	$f = '';
 
     if ( $count_user != 1 )     $f = 'user_not_found';
-    elseif ( !$GS->uid )        $f = 'uid_not_found';
+    elseif ( !$AC->uid )        $f = 'uid_not_found';
     elseif ( !$check_ip )       $f = 'wrong_ip';
     elseif ( !$limit_time )     $f = 'time_out';
     elseif ( $timeout_flag )    $f = 'timeout_flag';

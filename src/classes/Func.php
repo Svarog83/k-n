@@ -314,7 +314,7 @@ class Func
 			From : ID: '.$from_cur .' ----
 			To   : ID: '.$to_cur .' ----
 
-			user: '. GlobalSetup::getInstance()->user .'
+			user: '. AppConfig::getIns()->user .'
 
 			CurRates
 			'. print_r( $CurRates, true ) .'

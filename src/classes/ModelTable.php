@@ -96,6 +96,7 @@ class ModelTable
 	}
 
 	/**
+	 * Saves a record into database
 	 * @param bool $add_creator - flasg, shows if creator and create_date fields needs to be added
 	 * @param bool $edit_flag - Flag, shows that record will be edited
 	 * @param array $WhereArr - An array with conditions for editing a record

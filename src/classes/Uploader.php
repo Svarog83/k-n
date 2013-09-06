@@ -1,6 +1,6 @@
 <?php
 
-//GlobalSetup::getInstance()->debug_mode = true;
+//AppConfig::getIns()->debug_mode = true;
 
 class Uploader {
 
@@ -226,8 +226,8 @@ var UploadFilters     = <?= php2js( $this->filters ); ?>;
 							docs_ext		  = '". $docs_ext ."',
 							docs_size		  = '". $upload_size[ $k ] ."',
 							docs_date		  = '". date('Y-m-j H:i:s') ."',
-							docs_creator	  = '". GlobalSetup::getInstance()->user ."',
-							docs_hash		  = '". substr( md5( time() . GlobalSetup::getInstance()->user ) , 0, 10 ) ."'
+							docs_creator	  = '". AppConfig::getIns()->user ."',
+							docs_hash		  = '". substr( md5( time() . AppConfig::getIns()->user ) , 0, 10 ) ."'
 					";
 					$this->_oDB->query( $query, __FILE__, __LINE__ );
 				}

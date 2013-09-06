@@ -13,9 +13,9 @@ if( function_exists('date_default_timezone_set') )
     date_default_timezone_set( 'Europe/Moscow' );
 
 
-class GlobalSetup
+class AppConfig
 {
-	/** @var GlobalSetup */
+	/** @var AppConfig */
 	private static $instance;
 
 	/** @var bool */
@@ -91,7 +91,7 @@ class GlobalSetup
 	public $ajax_return = array();
 
 	/** @var bool*/
-	public $super_admin_flag = false;
+	public $admin_flag = false;
 
 	/** @var bool - показывает, используется ли в текущей базе Летнее время*/
 	public $BMDST = true;
@@ -112,29 +112,29 @@ class GlobalSetup
     }
 
 	/*
-	 * @return GlobalSetup
+	 * @return AppConfig
 	 */
-	public static function getInstance()
+	public static function getIns()
 	{
 		if ( self::$instance === null )
 		{
-			self::$instance = new GlobalSetup();
+			self::$instance = new AppConfig();
 		}
 
 		return self::$instance;
 	}
 }
 
-$GS = GlobalSetup::getInstance();
+$AC = AppConfig::getIns();
 
 
 if ( isset ( $_SERVER['SERVER_ADDR'] ) && strpos ( $_SERVER['SERVER_ADDR'], '127.0' ) !== false )
-    $GS->local_server		= TRUE;
+    $AC->local_server		= TRUE;
 else
-	$GS->local_server 		= FALSE;
+	$AC->local_server 		= FALSE;
 
-$GS->STD				= '0';
-$GS->TimeForAction		= 1800;
+$AC->STD				= '0';
+$AC->TimeForAction		= 1800;
 
 /**
  * Determines if server's time is DST time or not;
@@ -151,32 +151,32 @@ if ( !function_exists( 'is_dst' ) )
 	}
 }
 
-$GS->IS_DST = is_dst();
+$AC->IS_DST = is_dst();
 
-$GS->Charset 	= 'utf-8';
-$GS->DBCharset 	= 'utf8';
+$AC->Charset 	= 'utf-8';
+$AC->DBCharset 	= 'utf8';
 
-if ( $GS->local_server )
+if ( $AC->local_server )
 {
-	$GS->time_limit			= 96;
-	$GS->time_limit_update	= 96;
-    $GS->STD				=  0;
-	$GS->www_main			= 'rems';
+	$AC->time_limit			= 96;
+	$AC->time_limit_update	= 96;
+    $AC->STD				=  0;
+	$AC->www_main			= 'rems';
 }
 else
 {
-	$GS->time_limit			= 56;
-	$GS->time_limit_update	= 1;
+	$AC->time_limit			= 56;
+	$AC->time_limit_update	= 1;
 
-	$GS->www_main			= 'rems.ru';
+	$AC->www_main			= 'rems.ru';
 }
 
-$GS->admin_email		=  array(
+$AC->admin_email		=  array(
 'support_rems@itgr.ru'
 );
-$GS->admin_mail = $GS->admin_email[0];
+$AC->admin_mail = $AC->admin_email[0];
 
-$GS->login_admin_arr = array(
+$AC->login_admin_arr = array(
 'igortom' ,
 'itom' ,
 'dlap' ,
@@ -186,12 +186,12 @@ $GS->login_admin_arr = array(
 'Dee'
 );
 
-$GS->root				= $_SERVER['DOCUMENT_ROOT'] .'/SysMain';
-$GS->directory          = 'SysMain';
+$AC->root				= $_SERVER['DOCUMENT_ROOT'] .'/SysMain';
+$AC->directory          = 'SysMain';
 
-if( $GS->local_server )
+if( $AC->local_server )
 {
-	$GS->db_main_settings = array (
+	$AC->db_main_settings = array (
 	'db_host'	=> 'localhost',
 	'db_name'		=> 'db_main_rems',
 	'db_user_name'	=> 'root',
@@ -202,7 +202,7 @@ if( $GS->local_server )
 }
 else
 {
-	$GS->db_main_settings = array (
+	$AC->db_main_settings = array (
 	'db_host'	=> 'localhost',
 	'db_name'	=> 'db_main_rems',
 	'db_user_name'	=> 'rems',
@@ -215,7 +215,7 @@ if ( !function_exists( 'check_admin_login' ) )
 {
 	function check_admin_login( $login )
 	{
-		$login_admin_arr = GlobalSetup::getInstance()->login_admin_arr;
+		$login_admin_arr = AppConfig::getIns()->login_admin_arr;
 
 		if ( is_array( $login_admin_arr ) )
 			foreach ( $login_admin_arr AS $login_admin )
@@ -233,8 +233,8 @@ if ( !function_exists( 'eu' ) )
 	function eu( $sFile, $iLine, $sQuery ) 		{
 
 		global $UA;
-		$local_server = GlobalSetup::getInstance()->local_server;
-		$admin_email = GlobalSetup::getInstance()->admin_email;
+		$local_server = AppConfig::getIns()->local_server;
+		$admin_email = AppConfig::getIns()->admin_email;
 		$sFile = str_replace ( $_SERVER['DOCUMENT_ROOT'], "", str_replace ( "\\", "/", $sFile ) );
 
 
@@ -281,7 +281,7 @@ database: $$$DATABASE$$$
 '. mysql_errno(). '
 '. mysql_error().'
 
-User: '. GlobalSetup::getInstance()->user.'
+User: '. AppConfig::getIns()->user.'
 '. $UA['user_fam_eng'] .'  '. $UA['user_name_eng'] .'
 '. $UA['user_email'] .'
 
@@ -341,10 +341,10 @@ if ( !function_exists( 'rems_error_handler' ) )
 
 		if( error_reporting() )
 		{
-			$local_server       = GlobalSetup::getInstance()->local_server;
-			$admin_email        = GlobalSetup::getInstance()->admin_email;
-			$super_admin_flag   = GlobalSetup::getInstance()->super_admin_flag;
-			$ajax_flag          = GlobalSetup::getInstance()->ajax_flag;
+			$local_server       = AppConfig::getIns()->local_server;
+			$admin_email        = AppConfig::getIns()->admin_email;
+			$super_admin_flag   = AppConfig::getIns()->admin_flag;
+			$ajax_flag          = AppConfig::getIns()->ajax_flag;
 
 			global $UA;
 			global $BMAbr;
@@ -379,7 +379,7 @@ error number: '. $errno .'
 error description: '. $errstr .'
 BMAbr: '. $BMAbr .'
 
-User: '. GlobalSetup::getInstance()->user.'
+User: '. AppConfig::getIns()->user.'
 '. $UA['user_fam_eng'] .'  '. $UA['user_name_eng'] .'
 '. $UA['user_email'] .'
 
@@ -445,7 +445,7 @@ if ( !function_exists( 'mail_rems' ) )
 {
 	function mail_rems( $to, $subject, $mess, $headers = '' )
 	{
-		$send_email_option = GlobalSetup::getInstance()->send_email_option;
+		$send_email_option = AppConfig::getIns()->send_email_option;
 
 
 		$send_email = true;

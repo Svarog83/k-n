@@ -27,9 +27,9 @@ if ( $form_save_ajax !== '' )
 
 $new_user_skin          = Request::getVar( 'new_user_skin', '' );
 $ajax_flag              = (int)Request::getVar( 'ajax_flag', 0 );
-$GS->ajax_flag          = $ajax_flag ? true : false;
+$AC->ajax_flag          = $ajax_flag ? true : false;
 $flag_return_buffer     = (int)Request::getVar( 'flag_return_buffer', 0 );
-$GS->flag_return_buffer = $flag_return_buffer ? true : false;
+$AC->flag_return_buffer = $flag_return_buffer ? true : false;
 $no_frame               = (int)Request::getVar( 'no_frame', 0 );
 
 // сделать проверку наличия акшена и если такого нет в бд, то unset action и грузим первую страницу
@@ -113,7 +113,7 @@ exit;
 
 $REQ_FILL = '<span style="color:red;font-weight:bold;cursor: pointer;" title="__**Обязательное поле**__">*</span>';
 
-if ( !$GS->ajax_flag && !$GS->flag_return_buffer )
+if ( !$AC->ajax_flag && !$AC->flag_return_buffer )
 {
 	require_once( '../incl/header.php' );
 	require_once( '../incl/css.php' );
@@ -125,11 +125,11 @@ else
 	header("Expires: Wed, 01 July 2009 00:00:00");
 	header("Cache-Control: no-store, no-cache, must-revalidate, private");
 	header("Pragma: no-cache");
-	header("Content-type: text/html; charset={$GS->Charset}");
+	header("Content-type: text/html; charset={$AC->Charset}");
 }
 
 require_once( $action .'.php' );
-if ( !$GS->ajax_flag && !$GS->flag_return_buffer )
+if ( !$AC->ajax_flag && !$AC->flag_return_buffer )
 {
 	require_once( '../incl/footer.php' );
 }

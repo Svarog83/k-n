@@ -52,11 +52,22 @@ class User extends ModelTable
 		return self::showUserName( $row );
 	}
 
+	/**
+	 * @param $arr - User array
+	 * @return string - returns name and surname of the user
+	 */
 	public static function showUserName( $arr )
 	{
 		return $arr['user_fam_rus'] . ' ' . $arr['user_name_rus'];
 	}
 
+	/**
+	 * Tries to find a user record in DB
+	 * @param $user_id - ID of user
+	 * @param $user_hash = hash of user
+	 * @param string $user_activ - activity flasg
+	 * @param string $user_field - another field to search user
+	 */
 	public function getUser ( $user_id, $user_hash, $user_activ = 'a', $user_field = 'user_id' )
 	{
 		$user_id = (int)$user_id;

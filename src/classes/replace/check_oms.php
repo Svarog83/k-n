@@ -24,7 +24,7 @@ $check_ip           = TRUE;
 $timeout_flag       = FALSE;
 $count_user         = 0;
 
-$DB = Loader::DB( $AC->db_main_settings );
+$DB = AutoLoader::DB( $AC->db_main_settings );
 
 if ( $AC->uid && $AC->user )
 {
@@ -76,7 +76,7 @@ if ( $AC->uid && $AC->user )
             $AC->DBCharset = $row['db_charset'];
 	        $AC->Charset = ( $AC->DBCharset == 'utf8' ? 'utf-8' : 'windows-1251' );
 
-            $DB = Loader::DB ( $AC->db_settings, 'reconnect' );
+            $DB = AutoLoader::DB ( $AC->db_settings, 'reconnect' );
 
             /*Select the user details from the database*/
             $query = "
@@ -186,7 +186,7 @@ if ( $AC->uid && $AC->user )
 			'db_port' => $v['prt'],
 			'db_charset' => $v['c'] );
 
-			$DB = Loader::DB( $AC->db_settings, 'reconnect' );
+			$DB = AutoLoader::DB( $AC->db_settings, 'reconnect' );
 
             $query = "SELECT * FROM user WHERE user_uid	= '" . $AC->uid . "' && user_id = '" . $AC->user . "' && user_activ	IN ( 'a' )";
             $DB->query( $query, __FILE__, __LINE__ );
@@ -201,7 +201,7 @@ if ( $AC->uid && $AC->user )
 
         }
 
-		$DB = Loader::DB ( $AC->db_main_settings, 'reconnect' );
+		$DB = AutoLoader::DB ( $AC->db_main_settings, 'reconnect' );
 
         //// если нашли юзера на какой-либо базе
 
@@ -237,7 +237,7 @@ if ( $AC->uid && $AC->user )
         }
     }
 
-	$DB = Loader::DB ( $AC->db_settings, 'reconnect' );
+	$DB = AutoLoader::DB ( $AC->db_settings, 'reconnect' );
 
     if ( $count_user == 1 && !$timeout_flag )
     {
@@ -295,7 +295,7 @@ if ( $AC->uid && $AC->user )
         {
             $ADMIN_ACTION = TRUE;
 
-	        AppConfig::getIns()->admin_flag = true;
+	        AppConf::getIns()->admin_flag = true;
 
             $query = "
 				SELECT

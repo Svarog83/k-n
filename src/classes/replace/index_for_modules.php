@@ -6,7 +6,6 @@ function d($a) 		// debuging
 }
 if ( !isset ( $US ) || !$US )
     $US = '_main';
-
 $module = Request::getVar( 'module', '' );
 $action = Request::getVar( 'action', '' );
 

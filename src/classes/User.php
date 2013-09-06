@@ -34,7 +34,7 @@ class User extends ModelTable
 	public static function getUserName( $user_id, $field_name = 'user_id' )
 	{
 		global $CacheUser;
-		$DB = Loader::DB();
+		$DB = AutoLoader::DB();
 
 		if ( !isset ( $CacheUser[$user_id] ) )
 		{

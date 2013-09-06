@@ -90,15 +90,15 @@ class Debug
     public static function in_file( $text, $path = '', $file = FALSE, $mode = "a+" )
     {
         if  ( !$path )
-	        $path = $_SERVER['DOCUMENT_ROOT'] . "/tmp";
+	        $path = AppConf::getIns()->root_path . "/app/logs";
 	    
         $file = $file ? $file : date( "y.m.d" ).".php";
         $filename = $path."/".$file;
-        
-        $fp = @fopen( $filename, $mode);
+
+        $fp = fopen( $filename, $mode);
         if( $fp )
             fwrite( $fp, $text );
-        @fclose( $fp );
+        fclose( $fp );
     }
 
 }

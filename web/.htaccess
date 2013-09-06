@@ -3,7 +3,7 @@ php_flag register_globals off
 
 DirectoryIndex app.php
 
-#запрет выдачи листинга пустого каталога
+#пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 Options -Indexes
 
 php_flag register_globals off
@@ -36,7 +36,7 @@ php_flag register_globals off
     RewriteRule ^app\.php(/(.*)|$) %{ENV:BASE}/$2 [R=301,L]
 
     # If the requested filename exists, simply serve it.
-    # We only want to let Apache serve files and not directories.
+    # We only want to let Apache serve files and not dir_arr.
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule .? - [L]
 

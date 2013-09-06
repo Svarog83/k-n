@@ -153,7 +153,7 @@ class MySQL
 
 		if ( $add_creator )
 		{
-			$arr[$tbl . '_creator'] = AppConfig::getIns()->user;
+			$arr[$tbl . '_creator'] = AppConf::getIns()->user;
 			$arr[$tbl . '_create_date'] = new NoEscapeClass( 'NOW()' );
 		}
 
@@ -212,7 +212,7 @@ class MySQL
 		if ( !$file_name || !$line )
 		{
 			$trace_arr = debug_backtrace();
-			$trace_str = parse_debug_trace( $trace_arr, false );
+			$trace_str = Func::parseDebugTrace( $trace_arr, false );
 		}
 
 		if ( $add_str )
@@ -244,7 +244,7 @@ class MySQL
 				( $file_name && $line ? $file_name . "[" . $line . "]" . "\n" . str_replace( '*/', '*\/', $add_str ) : $trace_str ) . "*/";
 
 		$this->_db_result = mysql_query( $mysql_query, $this->_db_conn )
-		or eu( $file_name, $line, $mysql_query . ( $add_str ? "\n#" . str_replace( "\n", "\n#", $add_str ) : '' ) );
+		or query_error( $file_name, $line, $mysql_query . ( $add_str ? "\n#" . str_replace( "\n", "\n#", $add_str ) : '' ) );
 
 		$this->_aff_rows = mysql_affected_rows();
 		$this->_last_insert_id = mysql_insert_id();
@@ -305,7 +305,7 @@ class MySQL
 
 		if ( $add_creator )
 		{
-			$arr[$tbl . '_changer'] = AppConfig::getIns()->user;
+			$arr[$tbl . '_changer'] = AppConf::getIns()->user;
 			$arr[$tbl . '_change_date'] = new NoEscapeClass( 'NOW()' );
 		}
 
@@ -516,6 +516,7 @@ class MySQL
 	 */
 	public function get_fetch_ass()
 	{
+		var_dump ( $this->_db_result );
 		return mysql_fetch_assoc( $this->_db_result );
 	}
 
@@ -557,17 +558,17 @@ class MySQL
 	 */
 	function debugger()
 	{
-		if ( $this->_debug && ( AppConfig::getIns()->local_server || AppConfig::getIns()->admin_flag ) )
+		if ( $this->_debug && ( AppConf::getIns()->dev_server || AppConf::getIns()->admin_flag ) )
 		{
 			$str = "<br><font color=#ff0000>"
 					. "_connect_error='" . $this->_connect_error . "'<br>"
 					. "_db_select_error='" . $this->_db_select_error . "'<br>"
 					. "_query_error='" . $this->_query_error . "'<br>"
 					. "_query_last='" . $this->_query_last . "'<br>
-                 " . print_r( $this->_QueryLog, true ) . "
+                 <pre>" . print_r( $this->_QueryLog, true ) . "</pre>
                  </font>";
 
-			if ( AppConfig::getIns()->ajax_flag && AppConfig::getIns()->local_server )
+			if ( AppConf::getIns()->ajax_flag && AppConf::getIns()->dev_server )
 				mail( '', '', str_replace( "<br>", "\n", $str ) );
 			else
 				echo $str;

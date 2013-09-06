@@ -1,10 +1,8 @@
 <?php
+
 /**
- * файл с классами для работы с Request
+ * Class Request
  */
-/********************************************************************
-*    Класс для работы с Request
-********************************************************************/
 class Request
 {
     private function __construct()
@@ -65,102 +63,4 @@ class Request
         }
         return $default;
     }
-
-    /*public static function addVar( $name, $value, $where = "mixed" )
-    {
-        global $_REQUEST, $GLOBALS, $_GET, $_POST, $_COOKIE, $_SESSION;
-
-        foreach ( (array) $where as $key => $_value )
-            switch ( $_value )
-            {
-                case 'get':
-                    $HTTP_GET_VARS[$name][] = $value;
-                    break;
-                case 'post':
-                    $HTTP_POST_VARS[$name][] = $value;
-                    break;
-                case 'cookie':
-                    $HTTP_COOKIE_VARS[$name][] = $value;
-                    break;
-                case 'session':
-                    $_SESSION[$name][] = $value;
-                    break;
-                case 'request':
-                    $_REQUEST[$name][] = $value;
-                    break;
-                case 'global':
-                    global $$name;
-                    $$name = $value;
-                    $GLOBALS[$name][] = $value;
-                    break;
-                default:
-                    break;
-            }
-    }
-
-    public static function setVar( $name, $value, $where = "mixed" )
-    {
-        global $_REQUEST, $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS, $_SESSION;
-
-        foreach ( (array) $where as $key => $_value )
-        {
-            switch ( $_value )
-            {
-                case 'get':
-                    $HTTP_GET_VARS[$name] = $value;
-                    break;
-                case 'post':
-                    $HTTP_POST_VARS[$name] = $value;
-                    break;
-                case 'cookie':
-                    $HTTP_COOKIE_VARS[$name] = $value;
-                    break;
-                case 'session':
-                    $_SESSION[$name] = $value;
-                    break;
-                case 'request':
-                    $_REQUEST[$name] = $value;
-                    break;
-                case 'global':
-                    global $$name;
-                    $$name = $value;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    public static function unsetVar( $name, $where = "mixed" )
-    {
-        global $_REQUEST, $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS, $_SESSION;
-
-        foreach ( ( array ) $where as $key => $_value )
-        {
-            switch ( $_value )
-            {
-                case 'get':
-                    unset( $HTTP_GET_VARS[$name] );
-                    break;
-                case 'post':
-                    unset( $HTTP_POST_VARS[$name] );
-                    break;
-                case 'cookie':
-                    unset( $HTTP_COOKIE_VARS[$name] );
-                    break;
-                case 'session':
-                    unset( $_SESSION[$name] );
-                    break;
-                case 'request':
-                    unset( $_REQUEST[$name] );
-                    break;
-                case 'global':
-                    global $$name;
-                    unset( $$name );
-                    break;
-                default:
-                    break;
-            }
-        }
-    }*/
 }

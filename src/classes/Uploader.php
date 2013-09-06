@@ -1,6 +1,6 @@
 <?php
 
-//AppConfig::getIns()->debug_mode = true;
+//AppConf::getIns()->debug_mode = true;
 
 class Uploader {
 
@@ -25,9 +25,9 @@ class Uploader {
 	{
 		$this->module		= $module;
 	    $this->docs_link_id	= $docs_link_id;
-	    $this->_oDB         = Loader::DB();
-		$this->tmpDir       = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR .'tmp'. DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR;
-		$this->targetDir    = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR .'docs'. DIRECTORY_SEPARATOR . $this->module . DIRECTORY_SEPARATOR;
+	    $this->_oDB         = AutoLoader::DB();
+		$this->tmpDir       = AppConf::getIns()->root_path . DIRECTORY_SEPARATOR .'tmp'. DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR;
+		$this->targetDir    = AppConf::getIns()->root_path . DIRECTORY_SEPARATOR .'app/docs'. DIRECTORY_SEPARATOR . $this->module . DIRECTORY_SEPARATOR;
 
 	    if ( isset ( $options['file_max_size'] ) )
 			$this->file_max_size = $options['file_max_size'];
@@ -226,8 +226,8 @@ var UploadFilters     = <?= php2js( $this->filters ); ?>;
 							docs_ext		  = '". $docs_ext ."',
 							docs_size		  = '". $upload_size[ $k ] ."',
 							docs_date		  = '". date('Y-m-j H:i:s') ."',
-							docs_creator	  = '". AppConfig::getIns()->user ."',
-							docs_hash		  = '". substr( md5( time() . AppConfig::getIns()->user ) , 0, 10 ) ."'
+							docs_creator	  = '". AppConf::getIns()->user ."',
+							docs_hash		  = '". substr( md5( time() . AppConf::getIns()->user ) , 0, 10 ) ."'
 					";
 					$this->_oDB->query( $query, __FILE__, __LINE__ );
 				}
@@ -448,7 +448,7 @@ var UploadFilters     = <?= php2js( $this->filters ); ?>;
 
 	public static function getDocs( $module, $docs_link_id )
 	{
-		$DB = Loader::DB();
+		$DB = AutoLoader::DB();
 		$DocsArr = array();
 
 		$query = "

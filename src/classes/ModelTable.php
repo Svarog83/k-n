@@ -25,7 +25,7 @@ class ModelTable
 
 	public function __construct( $table_name )
 	{
-		$this->DB = Loader::DB();
+		$this->DB = AutoLoader::DB();
 		$this->_table_name = $table_name;
 	}
 

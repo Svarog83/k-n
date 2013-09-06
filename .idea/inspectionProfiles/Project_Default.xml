@@ -1,0 +1,60 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0" is_locked="false">
+    <option name="myName" value="Project Default" />
+    <option name="myLocal" value="false" />
+    <inspection_tool class="BadExpressionStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CssUnitlessNumber" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CssUnknownProperty" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myCustomPropertiesEnabled" value="true" />
+      <option name="myIgnoreVendorSpecificProperties" value="false" />
+      <option name="myCustomPropertiesList">
+        <value>
+          <list size="13">
+            <item index="0" class="java.lang.String" itemvalue="mso-style-id" />
+            <item index="1" class="java.lang.String" itemvalue="mso-footer-margin" />
+            <item index="2" class="java.lang.String" itemvalue="mso-height-source" />
+            <item index="3" class="java.lang.String" itemvalue="mso-data-placement" />
+            <item index="4" class="java.lang.String" itemvalue="mso-number-format" />
+            <item index="5" class="java.lang.String" itemvalue="mso-rotate" />
+            <item index="6" class="java.lang.String" itemvalue="mso-protection" />
+            <item index="7" class="java.lang.String" itemvalue="mso-style-name" />
+            <item index="8" class="java.lang.String" itemvalue="mso-style-parent" />
+            <item index="9" class="java.lang.String" itemvalue="mso-generic-font-family" />
+            <item index="10" class="java.lang.String" itemvalue="mso-header-margin" />
+            <item index="11" class="java.lang.String" itemvalue="mso-displayed-thousand-separator" />
+            <item index="12" class="java.lang.String" itemvalue="mso-displayed-decimal-separator" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="HtmlDeprecatedTag" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="HtmlFormInputWithoutLabel" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="HtmlPresentationalElement" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="4">
+            <item index="0" class="java.lang.String" itemvalue="autocomplete" />
+            <item index="1" class="java.lang.String" itemvalue="bordercolordark" />
+            <item index="2" class="java.lang.String" itemvalue="bordercolorlight" />
+            <item index="3" class="java.lang.String" itemvalue="x:num" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="JSDuplicatedDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSUnresolvedFunction" enabled="false" level="INFO" enabled_by_default="false" />
+    <inspection_tool class="JSUnresolvedVariable" enabled="false" level="INFO" enabled_by_default="false" />
+    <inspection_tool class="PhpIncludeInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpUndefinedVariableInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="RequiredAttributes" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myAdditionalRequiredHtmlAttributes" value="type,alt" />
+    </inspection_tool>
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
+  </profile>
+</component>

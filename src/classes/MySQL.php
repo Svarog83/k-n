@@ -1,4 +1,6 @@
 <?
+namespace SDClasses;
+
 /**
  * Class MySQL
  */
@@ -239,7 +241,7 @@ class MySQL
 			);
 		}
 
-		/*--- Debug Data */
+		/*--- Debugger Data */
 		$mysql_query = $query . "\n/* [" . date( 'Y-m-d h:i:s' ) . "]\n" .
 				( $file_name && $line ? $file_name . "[" . $line . "]" . "\n" . str_replace( '*/', '*\/', $add_str ) : $trace_str ) . "*/";
 
@@ -251,7 +253,7 @@ class MySQL
 
 		if ( $this->_debug )
 		{
-			/*+++ Debug Data */
+			/*+++ Debugger Data */
 			$this->_QueryLog[$last_log_key]['time_query'] = microtime( TRUE ) - $start_time;
 			$this->_QueryLog[$last_log_key]['memory_use'] = '~' . number_format( ( memory_get_usage() - $start_memory ), 2, ',', ' ' ) . 'bytes';
 			$this->_QueryLog[$last_log_key]['affected_rows'] = $this->_aff_rows;
@@ -259,14 +261,17 @@ class MySQL
 			$this->_QueryLog[$last_log_key]['insert_id'] = $this->_last_insert_id;
 			$this->_QueryLog[$last_log_key]['result'] = $this->_db_result;
 			$this->_QueryLog[$last_log_key]['info'] = mysql_info( $this->_db_conn );
-			/*--- Debug Data */
+			/*--- Debugger Data */
 
 			$this->_query_error = mysql_error();
 			$this->debugger();
 		}
-		if ( $this->_log || !$this->_db_result )
-			Debug::in_file( ( !$this->_db_result ? "ERROR QUERY: " : '' ) . $mysql_query . "\r\n----------------\r\n" );
 
+
+		if ( $this->_log || !$this->_db_result )
+		{
+			Debugger::in_file( ( !$this->_db_result ? "ERROR QUERY: " : '' ) . $mysql_query . "\r\n----------------\r\n" );
+		}
 
 		return $this->_db_result;
 	}
@@ -516,7 +521,6 @@ class MySQL
 	 */
 	public function get_fetch_ass()
 	{
-		var_dump ( $this->_db_result );
 		return mysql_fetch_assoc( $this->_db_result );
 	}
 

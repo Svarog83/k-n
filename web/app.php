@@ -1,8 +1,16 @@
 <?php
+
+use SDClasses\AppConf;
+use SDClasses\Controller;
+use SDClasses\Router;
+use SDClasses\Request;
+use SDClasses\View;
+
 error_reporting ( E_ALL );
 session_start();
 
 require( '../src/classes/AutoLoader.php' );
+
 $AC = AppConf::getIns();
 $AC->root_path = $_SERVER['DOCUMENT_ROOT'] . '/..';
 
@@ -23,7 +31,6 @@ $module = $AC->route->getModule();
 $action = $AC->route->getAction();
 
 ignore_user_abort( TRUE );
-
 $auth_verified  = false;
 
 $AC->user       = intval( Request::getVar( 'user_id', 0, 'session' ) );
@@ -32,24 +39,17 @@ $AC->uid        = trim( Request::getVar( 'user_uid', '', 'session' ) );
 $AC->module_time_start = time();
 
 $DB = AutoLoader::DB( $AC->db_settings );
+
 if ( $module )
 {
-	if ( is_dir ( $AC->root_path . '/src/' . $module . 'Bundle' ) )
-	{
-		AutoLoader::autoLoader( $module . 'Bundle' );
-		$classname = '\\' . $module. 'Bundle' . '\\Controller\\' . $module . 'Controller';
-		$obj = new $classname;
-		call_user_func( array( $obj, $action . 'Action' ) );
-
-	}
-	else
-		trigger_error( 'Module ' . $module . ' not found' );
-exit();
-
+	$AC->_controller = new Controller( $module, $action );
 }
 
 /*if a user is not authenticated*/
 if ( !$AC->user || !$AC->uid )
 {
-	require_once ( '../app/Resources/views/login_page.php' );
+
+	new View( '../app/Resources/views/login_page.php' );
+//	$AC->_view = new View( '', array ( 'module' => 'user', 'view' => 'login_page' ) );
+	$AC->_view->render();
 }

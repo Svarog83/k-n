@@ -1,9 +1,6 @@
 <?php
 
-if( function_exists('date_default_timezone_set') )
-    date_default_timezone_set( 'Europe/Moscow' );
-
-
+namespace SDClasses;
 /**
  * Class AppConf
  */
@@ -75,6 +72,14 @@ class AppConf
 	 * @var int
 	 */
 	public $module_time_start;
+	/**
+	 * @var Controller
+	 */
+	public $_controller;
+	/**
+	 * @var View
+	 */
+	public $_view;
 
 	private function __construct()
 	{
@@ -223,9 +228,6 @@ REMS
 			$admin_flag         = AppConf::getIns()->admin_flag;
 			$ajax_flag          = AppConf::getIns()->ajax_flag;
 
-			global $UA;
-			global $BMAbr;
-
 			$trace_arr = debug_backtrace(  );
 	        $trace_str = Func::parseDebugTrace( $trace_arr, false );
 
@@ -255,8 +257,6 @@ error number: '. $errno .'
 error description: '. $errstr .'
 
 User: '. AppConf::getIns()->user.'
-'. $UA['user_fam_eng'] .'  '. $UA['user_name_eng'] .'
-'. $UA['user_email'] .'
 
 Call Stack:
 ----------
@@ -291,15 +291,3 @@ Best regards!
 		}
 	}
 }
-
-function query_error( $file_name, $line, $query )
-{
-	AppConf::query_error ( $file_name, $line, $query );
-}
-
-function our_error_handler( $errno, $errstr, $errfile, $errline, $vars )
-{
-	AppConf::our_error_handler( $errno, $errstr, $errfile, $errline, $vars );
-}
-
-set_error_handler( "our_error_handler" );

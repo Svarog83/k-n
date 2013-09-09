@@ -1,4 +1,7 @@
 <?php
+use SDClasses\MySQL;
+use SDClasses\AppConf;
+
 class AutoLoader
 {
     function __construct()
@@ -40,7 +43,15 @@ class AutoLoader
      */
     public static function autoLoader( $className )
     {
-        static $incl_path;
+
+	    if ( strpos( $className, '\\' ) !== false )
+	    {
+		    $className = explode ( '\\', $className )[1];
+	    }
+
+//	    echo '<br>$ = ' . $className . '<br><br>';
+
+	    static $incl_path;
         if( !$incl_path )
         {
             $dir_arr = array(
@@ -56,7 +67,7 @@ class AutoLoader
 	        //if we are loading basic classes
 		    $className = str_ireplace( '_', '/', $className );
 
-	        if( @include_once( $className.'.php' ) )
+	        if( include_once( $className.'.php' ) )
 	            return;
 
 		    //Маски возможных имен файла
@@ -71,7 +82,7 @@ class AutoLoader
 	        {
 	            $path = sprintf( $file_format, $className );
 
-	            if( @include_once( $path ) )
+	            if( include_once( $path ) )
 	                return;
 	        }
 	    }
@@ -89,5 +100,21 @@ class AutoLoader
 
 function __autoload( $class_name )
 {
-    AutoLoader::autoLoader( $class_name );
+	AutoLoader::autoLoader( $class_name );
 }
+
+if( function_exists('date_default_timezone_set') )
+    date_default_timezone_set( 'Europe/Moscow' );
+
+function query_error( $file_name, $line, $query )
+{
+	AppConf::query_error ( $file_name, $line, $query );
+}
+
+function our_error_handler( $errno, $errstr, $errfile, $errline, $vars )
+{
+	AppConf::our_error_handler( $errno, $errstr, $errfile, $errline, $vars );
+}
+
+set_error_handler( "our_error_handler" );
+

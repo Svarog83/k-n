@@ -28,6 +28,9 @@
                             <span class="add-on"><i class="icon-lock"></i></span><input type="password" name="form_password" placeholder="Пароль" />
                         </div>
                     </div>
+	                <?php if ( !empty( $params['flash_message'] ) ): ?>
+					<span style="color: red; font-weight: bold;"><?php echo $params['flash_message'] ?></span>
+	                <? endif; ?>
                 </div>
                 <div class="form-actions">
                     <span class="pull-left"><a href="mailto: support@ilaptev.com" class="flip-link" id="to-recover">Забыли пароль?</a></span>
@@ -57,7 +60,7 @@
         	    "jquery_autocomplete"=>"",
         	    "DP_Debug"=>"",
         	    "dump"=>"" );
-            $web_root   = AppConf::getIns()->root_path . '/web';
+            $web_root   = SDClasses\AppConf::getIns()->root_path . '/web';
             foreach ($arr_js_files as $js_file => $js_path )
             {
                 $_js_file = "/js/functions/". $js_path.$js_file. ".js";

@@ -1,6 +1,6 @@
 <?php
 
-namespace UserBundle
+namespace userBundle
 {
 	class userBundle
 	{

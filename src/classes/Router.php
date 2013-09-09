@@ -1,11 +1,6 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Svarog
- * Date: 06.09.13
- * Time: 22:12
- * To change this template use File | Settings | File Templates.
- */
+
+namespace SDClasses;
 
 class Router
 {

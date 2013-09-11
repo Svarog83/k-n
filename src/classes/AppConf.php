@@ -231,7 +231,6 @@ REMS
 			$trace_arr = debug_backtrace(  );
 	        $trace_str = Func::parseDebugTrace( $trace_arr, false );
 
-
 			$error_text =  '<br><span style="color:red;"><b>PHP Error</b>:</span><br>
 Description: '.$errstr.'
 <br>
@@ -260,7 +259,8 @@ User: '. AppConf::getIns()->user.'
 
 Call Stack:
 ----------
-' .  $trace_str . '
+' .  str_replace ( "\n", "\r\n
+", $trace_str ) . '
 ----------
 
 Vars:

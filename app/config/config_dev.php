@@ -8,5 +8,5 @@ $AC->db_settings = array (
 	'db_port' => '3306' );
 
 $AC->admin_emails		=  array(
-'www-data@vetko.net'
+'sergey.vetko@gmail.com'
 );

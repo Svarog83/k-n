@@ -40,7 +40,7 @@ $AC->module_time_start = time();
 
 $DB = AutoLoader::DB( $AC->db_settings );
 
-if ( $module )
+if ( $module && $module != 'favicon.ico' )
 {
 	$AC->_controller = new Controller( $module, $action );
 }

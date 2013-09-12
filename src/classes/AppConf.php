@@ -80,6 +80,10 @@ class AppConf
 	 * @var View
 	 */
 	public $_view;
+	/**
+	 * @var
+	 */
+	public $secret_salt;
 
 	private function __construct()
 	{

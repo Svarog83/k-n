@@ -26,7 +26,7 @@ class View {
 				$this->_path = '../app/Resources/views/' . $params['view'] . '.php';
 			else if ( !empty ( $params['module'] ) && !empty ( $params['view'] ) )
 			{
-				$this->_path = AppConf::getIns()->root_path . '/src/' . $params['module'] . 'Bundle' . '/views/' . $params['view'] . '.php';
+				$this->_path = AppConf::getIns()->root_path . '/src/' . $params['module'] . 'Bundle' . '/views/' . $params['view'] . 'View.php';
 			}
 		}
 		else

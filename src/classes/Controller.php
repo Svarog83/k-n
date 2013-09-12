@@ -28,16 +28,14 @@ class Controller
 				$obj = new $classname ( $module, $action );
 
 				if ( !method_exists( $obj, $action . 'Action' ) )
-					trigger_error( 'Method ' . $action . 'Action' . ' is not found in class' . $classname );
+					$this->Error404( 'Method ' . $action . 'Action' . ' is not found in class' . $classname );
 				else
 					call_user_func( array( $obj, $action . 'Action' ) );
 
 			}
 			else
-				trigger_error( 'Module ' . $module . ' not found' );
+				$this->Error404( 'Module `' . $module . '` not found' );
 		}
-
-
 	}
 
 	/**
@@ -77,12 +75,17 @@ class Controller
 
 	/**
 	 * Renders the specified view and outputs it into browser
-	 * @param $view
+	 * @param $view_options
 	 * @param array $params
 	 */
-	public function render( $view, $params = array() )
+	public function render( $view_options, $params = array() )
 	{
-		$view = new View( '', array ( 'view' => $view ) );
+		$view = new View( '', $view_options );
 		$view->render( $params );
+	}
+
+	public function Error404( $text )
+	{
+		echo $text . '<br><a href="/">Go home</a>';
 	}
 }

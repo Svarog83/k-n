@@ -2,6 +2,7 @@
 
 use SDClasses\AppConf;
 use SDClasses\Controller;
+use SDClasses\Func;
 use SDClasses\Router;
 use SDClasses\Request;
 use SDClasses\View;
@@ -39,6 +40,19 @@ $AC->uid        = trim( Request::getVar( 'user_uid', '', 'session' ) );
 $AC->module_time_start = time();
 
 $DB = AutoLoader::DB( $AC->db_settings );
+
+//check user
+if ( $AC->user && $AC->uid && ( $module != 'user' || $action != 'auth' ) )
+{
+	if ( !Func::CheckUser() )
+	{
+		$AC->user = $AC->uid = '';
+		$module = '';
+	}
+	else if ( !$module )
+		$module = 'first';
+
+}
 
 if ( $module && $module != 'favicon.ico' )
 {

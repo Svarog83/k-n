@@ -24,7 +24,7 @@ a:hover {
 }
 
 #header h1 {
-    background: url("../img/logo.png") no-repeat scroll 0 0 transparent;
+    background: no-repeat scroll 0 0 transparent;
     height: 31px;
     left: 15px;
     line-height: 600px;
@@ -216,7 +216,6 @@ a:hover {
 	background-image: linear-gradient(top, #FFFFFF 0%, #EEEEEE 100%);
     border-top-left-radius: 8px;
     height: 80px;
-    position: abslute;
     width: 100%;
     margin-top: -38px;
     z-index: 20;

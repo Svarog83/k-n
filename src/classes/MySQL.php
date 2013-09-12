@@ -521,7 +521,7 @@ class MySQL
 	 */
 	public function get_fetch_ass()
 	{
-		return mysql_fetch_assoc( $this->_db_result );
+		return is_resource( $this->_db_result) ? mysql_fetch_assoc( $this->_db_result ) : false;
 	}
 
 	/**

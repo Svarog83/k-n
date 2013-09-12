@@ -1,6 +1,7 @@
 <?php
 
 namespace SDClasses;
+use SDClasses\AppConf;
 /**
  * Class Func
  */
@@ -112,6 +113,21 @@ class Func
 	public static function getPrice( $str )
 	{
 		return str_replace ( array (' ', ',' ), array ( '', '.' ), $str );
+	}
+
+	public static function CheckUser()
+	{
+		$DB = \AutoLoader::DB();
+		$user = (int)AppConf::getIns()->user;
+		$uid = AppConf::getIns()->uid;
+		$query = "SELECT * FROM user WHERE user_id = '$user' AND user_uid = '" . mysql_real_escape_string( $uid ) . "'";
+		$DB->query( $query, __FILE__, __LINE__ );
+
+		$row = $DB->get_fetch_ass();
+		if ( $DB->getAffRows() == 1 && is_array( $row ) && $row['user_id'] )
+			return true;
+		else
+			return false;
 	}
 
 	function sendMail( $to, $subject, $mess, $headers = '' )

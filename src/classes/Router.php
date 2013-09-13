@@ -17,6 +17,9 @@ class Router
 		if ( isset ( $arr[2]) && $arr[2] )
 			$this->_action = $arr[2];
 
+		if ( strpos ( $this->_action, '?') !== false )
+			$this->_action = explode ( '?', $this->_action )[0];
+
 		if ( count ( $arr ) > 3  )
 			$this->_params = array_slice( $arr, 3 );
 	}

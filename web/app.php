@@ -31,13 +31,11 @@ $AC->route = new Router( $_SERVER['REQUEST_URI'] );
 $module = $AC->route->getModule();
 $action = $AC->route->getAction();
 
-ignore_user_abort( TRUE );
-$auth_verified  = false;
+$ajax_flag              = (int)Request::getVar( 'ajax_flag', 0 );
+$AC->ajax_flag          = $ajax_flag ? true : false;
 
 $AC->user       = intval( Request::getVar( 'user_id', 0, 'session' ) );
 $AC->uid        = trim( Request::getVar( 'user_uid', '', 'session' ) );
-
-$AC->module_time_start = time();
 
 $DB = AutoLoader::DB( $AC->db_settings );
 
@@ -54,9 +52,42 @@ if ( $AC->user && $AC->uid && ( $module != 'user' || $action != 'auth' ) )
 
 }
 
-if ( $module && $module != 'favicon.ico' )
+$AC->module_time_start = time();
+if ( $module )
 {
+	if ( isset ( $AC->modules[$module] ) )
+		$AC->breadcrumb[] = $AC->modules[$module]['name'];
+
+	if ( $action )
+	{
+		if ( strpos ( $action, 'edit' ) !== false )
+			$AC->breadcrumb[] = 'Редактирование';
+		else if ( strpos ( $action, 'show' ) !== false )
+			$AC->breadcrumb[] = 'Просмотр';
+		else if ( strpos ( $action, 'list' ) !== false )
+			$AC->breadcrumb[] = 'Листинг';
+		else if ( strpos ( $action, 'save' ) !== false )
+			$AC->breadcrumb[] = 'Сохранение';
+		else
+			$AC->breadcrumb[] = 'Просмотр';
+	}
+
+	if ( !$AC->ajax_flag && $AC->user)
+	{
+		new View( '', array ( 'view' => 'header' ) );
+		$AC->_view->render();
+		new View( '', array ( 'view' => 'sidebar' ) );
+		$AC->_view->render( array ( 'menu' => AppConf::getIns()->menu ) );
+	}
+
 	$AC->_controller = new Controller( $module, $action );
+
+	if ( !$AC->ajax_flag && $AC->user )
+	{
+		new View( '', array ( 'view' => 'footer' ) );
+		$AC->_view->render();
+	}
+
 }
 
 /*if a user is not authenticated*/

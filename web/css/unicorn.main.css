@@ -17,7 +17,7 @@ a:hover {
 
 /* Header */
 #header {
-    height: 77px;
+    height: 50px;
     position: relative;
     width: 100%;
     z-index: -9;
@@ -771,6 +771,7 @@ a:hover {
     margin: 0 0 10px;
     padding: 13px 20px 10px;
     position: relative;
+    width: 300px;
 }
 .site-stats li:hover {
     background-color: #EDEDED;
@@ -835,6 +836,7 @@ a:hover {
     float: right;
     width: 300px;
 }
+
 .invoice-to li, .invoice-from li {
     clear: left;
 }
@@ -1301,14 +1303,29 @@ form {
 .form-horizontal .control-group:last-child {
 	border-bottom: 0;
 }
+
 .form-horizontal .control-label {
 	padding-top: 15px;
 	width: 180px;
 }
+
+.form-horizontal .sd_entry_label {
+	padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: left;
+}
+
 .form-horizontal .controls {
 	margin-left: 200px;
 	padding: 10px 0;
 }
+
+.form-horizontal .sd_content {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-weight: bold;
+}
+
 .form-horizontal input[type=text], .form-horizontal input[type=password], .form-horizontal textarea {
 	width: 80%;
 }
@@ -1316,6 +1333,7 @@ form {
 	margin-top: 0;
 	margin-bottom: 0;
 }
+
 .help-block, .help-inline {
     color: #999999;
 }
@@ -1404,9 +1422,19 @@ form {
     .form-horizontal .control-label {
         padding-left: 30px;
     }
+    .form-horizontal .sd_entry_label {
+    	padding-top: 0px;
+        padding-bottom: 0px;
+        text-align: left;
+    }
     .form-horizontal .controls {
         margin-left: 0;
         padding: 10px 30px;
+    }
+    .form-horizontal .sd_content {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        font-weight: bold;
     }
     .form-actions {
         text-align: center;

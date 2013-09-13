@@ -81,9 +81,23 @@ class AppConf
 	 */
 	public $_view;
 	/**
-	 * @var
+	 * @var string
 	 */
 	public $secret_salt;
+
+	/**
+	 * @var array
+	 */
+	public $menu;
+	/**
+	 * @var array
+	 */
+	public $modules;
+
+	/**
+	 * @var array
+	 */
+	public $breadcrumb;
 
 	private function __construct()
 	{
@@ -247,6 +261,9 @@ trace stack: <b>' . nl2br ( $trace_str ) .	'</b><br>
 				echo $error_text;
 			}
 
+			else if ( $ajax_flag )
+			{
+
 			$mess_to_admin = '
 
 Greetings, commander.
@@ -291,7 +308,8 @@ Browser-----------
 Best regards!
 
 ';
-			@mail( implode( ',', $admin_email ), 'PHP Error', $mess_to_admin );
+				mail( implode( ',', $admin_email ), 'PHP Error', $mess_to_admin );
+			}
 		}
 	}
 }

@@ -77,5 +77,9 @@
         //-->
         </script>
 
+	<div id="footer" style="text-align: center; color: #0088cc">
+        <?php echo '2013' . ( date( "Y" ) != '2013' ? '-' . date( "Y" ) : '' ) ?> &copy; SD development</a>
+    </div>
+
     </body>
 </html>

@@ -11,18 +11,18 @@ class User extends ModelTable
 
 	/**
 	 * @param  int|array $user - id of user OR array with data
-	 * @param string $user_hash - hash
+	 * @param string $user_uid - hash
 	 * @param string $user_activ - flag of activity for DB query
 	 * @param string $user_field
 	 */
-	public function __construct( $user, $user_hash = '', $user_activ = 'a', $user_field = 'user_id' )
+	public function __construct( $user, $user_uid = '', $user_activ = 'a', $user_field = 'user_id' )
 	{
 		parent::__construct( $this->table_name );
 		
 		if ( is_array ( $user ) && count ( $user ) )
 			$this->setRow( $user );
 		else if ( is_numeric( $user ) )
-			$this->getUser( $user, $user_hash, $user_activ, $user_field );
+			$this->getUser( $user, $user_uid, $user_activ, $user_field );
 		else
 		{
 			$this->setRow( $this->getEmpty() );
@@ -64,19 +64,19 @@ class User extends ModelTable
 	/**
 	 * Tries to find a user record in DB
 	 * @param $user_id - ID of user
-	 * @param $user_hash = hash of user
+	 * @param $user_uid = uid of user
 	 * @param string $user_activ - activity flasg
 	 * @param string $user_field - another field to search user
 	 */
-	public function getUser ( $user_id, $user_hash, $user_activ = 'a', $user_field = 'user_id' )
+	public function getUser ( $user_id, $user_uid, $user_activ = 'a', $user_field = 'user_id' )
 	{
 		$user_id = (int)$user_id;
 		$user_field = ( $user_field == 'user_ida' ? $user_field : 'user_id' );
-		$user_hash = mysql_real_escape_string( $user_hash );
+		$user_uid = mysql_real_escape_string( $user_uid );
 
 		$hash_string = '';
-		if ( $user_hash )
-			$hash_string = "AND user_hash = '$user_hash'";
+		if ( $user_uid )
+			$hash_string = "AND user_hash = '$user_uid'";
 			
 		$query = "SELECT * FROM user WHERE $user_field = '$user_id' $hash_string AND user_activ = '$user_activ'";
 		$this->DB->query( $query, __FILE__, __LINE__ );

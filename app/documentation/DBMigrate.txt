@@ -8,5 +8,9 @@ ALTER TABLE `user`
 ADD `user_uid` varchar(40) COLLATE 'utf8_general_ci' NOT NULL,
 COMMENT='';
 
+ALTER TABLE `user`
+ADD `user_email` varchar(100) COLLATE 'utf8_general_ci' NOT NULL AFTER `user_pass`,
+COMMENT=''; -- 0.024 s
+
 ########################################################################################
 ########################################################################################

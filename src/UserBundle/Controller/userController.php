@@ -41,7 +41,6 @@ class userController extends SDClasses\Controller
 	{
 //		$this->render( array ( 'module' => 'first', 'view' => 'default' ), array () );
 
-
 		$user = new \User( AppConf::getIns()->user );
 
 		if ( $user->getExist() )

@@ -61,7 +61,7 @@ class View
 
 			require( $this->_path );
 
-			$str = ob_get_clean();
+			$str = ob_get_contents();
 			ob_end_clean();
 
 			return $str;
@@ -95,7 +95,8 @@ class View
 			<?= $text ?>
 		</div>
 		<?
-		$str = ob_get_clean();
+		$str = ob_get_contents();
+		ob_end_clean();
 		return $str;
 	}
 
@@ -125,7 +126,8 @@ class View
 			<i class="<?= $icon ?> icon-white"></i> <?= $heading ?>
 		</button>
 		<?
-		$str = ob_get_clean();
+		$str = ob_get_contents();
+		ob_end_clean();
 		return $str;
 	}
 
@@ -182,35 +184,8 @@ class View
 			</div>
 		</div>
 		<?
-		$str = ob_get_clean();
+		$str = ob_get_contents();
+		ob_end_clean();
 		return $str;
 	}
-
-	/**
-		 * @param string $field_name - name of the field
-		 * @param string $value - default value for the field
-		 * @param array $arr - options
-		 * @return string
-		 */
-		public function showText( $field_name, $value, $arr = array( ) )
-		{
-			return '<input
-	            type="' . ( !empty( $arr['password'] ) ? 'password' : 'text' ) . '"
-	            name="' . $field_name . '"
-	            size="' . ( !empty( $arr['size'] ) ? $arr['size'] : '16' ) . '"
-	            value="' . $value . '"
-	            ' . ( !empty( $arr['onchange'] ) ? ' onChange="' . $arr['onchange'] . '"' : '' ) .
-			       ( isset ( $arr['id'] ) && $arr['id'] ? ' id="' . $arr['id'] . '"' : '' ) .
-			       ( isset ( $arr['validation'] ) && $arr['validation'] ? ' class="' . $arr['validation'] . '"' : '' ) .
-			       ( isset ( $arr['equalTo'] ) && $arr['equalTo'] ? ' equalTo="' . $arr['equalTo'] . '"' : '' ) .
-			       ( isset ( $arr['minlength'] ) && $arr['minlength'] ? ' minlength="' . $arr['minlength'] . '"' : '' ) .
-				   ( isset ( $arr['maxlength'] ) && $arr['maxlength'] ? ' maxlength="' . $arr['maxlength'] . '"' : '' ) .
-				   ( isset ( $arr['min'] ) && $arr['min'] ? ' min="' . $arr['min'] . '"' : '' ) .
-				   ( isset ( $arr['max'] ) && $arr['max'] ? ' max="' . $arr['max'] . '"' : '' ) .
-			       ( isset ( $arr['onfocus'] ) && $arr['onfocus'] ? ' onFocus="' . $arr['onfocus'] . '"' : '' ) .
-			       ( isset ( $arr['onblur'] ) && $arr['onblur'] ? ' onBlur="' . $arr['onblur'] . '"' : '' ) .
-			       ( isset ( $arr['add_str'] ) && $arr['add_str'] ? $arr['add_str'] : '' ) . '>' .
-			       ( isset ( $arr['add_html'] ) && $arr['add_html'] ? $arr['add_html'] : '' ) . '';
-		}
-
 }

@@ -31,6 +31,11 @@ class User extends ModelTable
 	}
 
 
+	/** Return name of a user
+	 * @param $user_id
+	 * @param string $field_name
+	 * @return string
+	 */
 	public static function getUserName( $user_id, $field_name = 'user_id' )
 	{
 		global $CacheUser;

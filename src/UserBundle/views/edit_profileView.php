@@ -1,6 +1,7 @@
 <?php
 
 use SDClasses\AppConf;
+use SDClasses\Form;
 use \User;
 
 /**
@@ -8,6 +9,7 @@ use \User;
  * @var User $user
  * @var SDClasses\View $this
  */
+$form = new Form();
 $user = $params['user'];
 $row = $user->getRow();
 
@@ -35,9 +37,12 @@ $row = $user->getRow();
 				<div class="widget-content form-horizontal">
 					<form action="/user/save_profile" method="get" class="form-horizontal"/>
 					<?= $this->showEntry( 'ID', $row['user_id'] ); ?>
-					<?= $this->showText( 'form_name', User::showUserName( $row ) ); ?>
-					<?= $this->showText( 'form_login', $row['user_login'] ); ?>
-					<?= $this->showText( 'form_email', $row['user_email'] ); ?>
+					<?= $form->showTextInput( 'Имя', 'form_name', User::showUserName( $row ), array ( 'validation' => 'required' ) ); ?>
+					<?= $form->showTextInput( 'Логин', 'form_login', $row['user_login'] ); ?>
+					<?= $form->showTextInput( 'E-mail','form_email', $row['user_email'], array ( 'help_block' => 'Проверьте внимательно!' ) ); ?>
+
+					<?= $form->showTextInput( 'Новый пароль','form_pass_new', '', array ( 'placeholder' => 'New placeholder' ) ); ?>
+
 					<?= $this->showEntry( 'Активен?', $row['user_activ'] == 'a' ? 'Да' : 'Нет' ); ?>
 					<div class="form-actions">
 						<?= $this->showButton( 'Сохранить', 'btn-success', 'icon-ok', array ( 'submit' => true ) ) ?>

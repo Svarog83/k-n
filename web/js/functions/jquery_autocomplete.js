@@ -13,7 +13,7 @@
 
     var options;
 
-    $.fn.OMSAutocomplete = function(params)
+    $.fn.autoComplete = function(params)
     {
         options = $.extend({}, defaults, options, params);
         GlobalSettings[$(this).attr('id')] = options;

@@ -4,15 +4,18 @@
 <script src="/js/jquery.min.js"></script>
 <script src="/js/jquery.ui.custom.js"></script>
 <script src="/js/bootstrap.min.js"></script>
-<script src="/js/jquery.flot.min.js"></script>
-<script src="/js/jquery.flot.resize.min.js"></script>
 <script src="/js/jquery.peity.min.js"></script>
 <script src="/js/fullcalendar.min.js"></script>
 <script src="/js/unicorn.js"></script>
-<script src="/js/unicorn.dashboard.js"></script>
 
 <script src="/js/jquery.gritter.min.js"></script>
-<script src="/js/unicorn.interface.js"></script>
+
+
+<!--scripts for forms-->
+<script src="/js/jquery.uniform.js"></script>
+<script src="/js/select2.min.js"></script>
+<script src="/js/unicorn.form_common.js"></script>
+<script src="/js/functions/jquery_clone.js"></script>
 
 </body>
 </html>

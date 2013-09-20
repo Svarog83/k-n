@@ -28,10 +28,10 @@ class FormBasic
 	/**
 	 * @param string $field_name - name of the field
 	 * @param string $value - default value for the field
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
-	public function showText( $field_name, $value, $arr = array() )
+	public function showTextInput( $field_name, $value, $arr = array() )
 	{
 		return '<input
             type="' . ( !empty( $arr['password'] ) ? 'password' : 'text' ) . '"
@@ -57,10 +57,10 @@ class FormBasic
 	/**
 	 * @param string $field_name - name of the field
 	 * @param string $value - default value for the field
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
-	public function showTextArea( $field_name, $value, $arr = array() )
+	public function showTextAreaInput( $field_name, $value, $arr = array() )
 	{
 		return '<textarea
             name="' . $field_name . '"
@@ -72,35 +72,59 @@ class FormBasic
 		( !empty ( $arr['minlength'] ) ? ' minlength="' . $arr['minlength'] . '"' : '' ) .
 		( !empty ( $arr['onchange'] ) ? ' onChange="' . $arr['onchange'] . '"' : '' ) .
 		( !empty ( $arr['onfocus'] ) ? ' onFocus="' . $arr['onfocus'] . '"' : '' ) .
+		( !empty ( $arr['placeholder'] ) ? ' placeholder="' . $arr['placeholder'] . '"' : '' ) .
 		( !empty ( $arr['onblur'] ) ? ' onBlur="' . $arr['onblur'] . '"' : '' ) .
 		( !empty ( $arr['add_str'] ) ? $arr['add_str'] : '' ) . '>' . $value . '</textarea>' .
+		( !empty ( $arr['help_block'] ) ? '<span class="help-block">' . $arr['help_block'] . '</span>' : '' ) .
 		( !empty ( $arr['add_html'] ) ? $arr['add_html'] : '' ) . '';
 	}
 
 	/**
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
-	public function showSelect( $arr )
+	public function showSelectInput( $arr )
 	{
-		/* we need to replace number of paramtered for choice_simple function. If there is only one then we need to transform it into 4. */
-		if (
-				!empty( $arr['onchange'] ) &&
-				strpos( $arr['onchange'], 'choice_simple' ) !== false &&
-				preg_match( "/choice_simple *\( *'([^']+)' *\)/i", $arr['onchange'] )
-		)
-			$arr['onchange'] = preg_replace( "/choice_simple *\( *'([^']+)' *\)/i", "choice_simple('$1', '', '', this)", $arr['onchange'] );
+		$txt = '<select name="' . ( $arr['field_name'] ) . '" ' .
+				( !empty ( $arr['show_select_title'] ) ? ' data-placeholder="' . $arr['show_select_title'] . '"' : '' ) .
+				( !empty ( $arr['id'] ) ? ' id="' . $arr['id'] . '"' : '' ) .
+				( !empty ( $arr['multiple'] ) ? ' multiple size="' . $arr['size'] . '"' : '' ) .
+				( !empty ( $arr['onchange'] ) ? ' onChange="' . $arr['onchange'] . '"' : '' ) .
+				( !empty ( $arr['onfocus'] ) ? ' onFocus="' . $arr['onfocus'] . '"' : '' ) .
+				( !empty ( $arr['onblur'] ) ? ' onBlur="' . $arr['onblur'] . '"' : '' ) .
+				( !empty ( $arr['validation'] ) ? ' class="' . $arr['validation'] . '"' : '' ) .
+				( !empty ( $arr['add_str'] ) ? $arr['add_str'] : '' ) . '>';
 
-		return PrepareSelect( $arr );
+		if ( !empty ( $arr['show_select_title'] ) )
+			$txt .= '<option></option>';
+
+		foreach ( $arr['select_values'] as $key => $val )
+			$txt .= '<option value="' .
+					( ( isset( $arr['block_values'] ) && !in_array( $key, $arr['block_values'] ) || !isset( $arr['block_values'] ) ) ?
+							$key . '"' :
+							'empty"'
+					) .
+					(
+					( ( isset( $arr['selected_value'] ) && $arr['selected_value'] !== '' && $key == $arr['selected_value'] ) ||
+							( count( $arr['select_values'] ) == 1 && !empty( $arr['set_only_one'] ) )
+					) ?
+							' selected' :
+							''
+					) .
+					'>' . ( $val ) . '';
+
+		$txt .= '</select>';
+
+		return $txt;
 	}
 
 	/**
 	 * @param string $field_name - name of the field
 	 * @param string $value - default value for the field
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
-	public function showCheckBox( $field_name, $value, $arr )
+	public function showCheckBoxInput( $field_name, $value, $arr )
 	{
 		//$field_name = str_replace( '[]', '[0]', $field_name );
 		return '
@@ -118,13 +142,13 @@ class FormBasic
 	/**
 	 * @param string $field_name - name of the field
 	 * @param string $value - default value for the field
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
-	public function showRadioButton( $field_name, $value, $arr )
+	public function showRadioInput( $field_name, $value, $arr )
 	{
 		return '
-            <input style="vertical-align: middle;" type="radio" name="' . $field_name . '" value="' . $value . '" ' .
+            <input type="radio" name="' . $field_name . '" value="' . $value . '" ' .
 		( !empty ( $arr['id'] ) ? ' id="' . $arr['id'] . '"' : '' ) .
 		( !empty ( $arr['validation'] ) ? ' class="' . $arr['validation'] . '"' : '' ) .
 		( !empty ( $arr['checked'] ) ? ' checked="checked"' : '' ) .
@@ -136,55 +160,13 @@ class FormBasic
 	}
 
 	/**
-	 * @param array $arr - _options
-	 * @return string
-	 */
-	public function showModal( $arr )
-	{
-		return '<div><span id=' . $arr['div_id'] . ' style="font-weight:bold;">' . $arr['add_name'] . '&nbsp;&nbsp;</span>
-					&nbsp;
-					<img src="/icon/edit.gif" width="16" height="16" border=0 alt="List" style="cursor: pointer;" OnClick="modal_select(this, \'' . $arr['field'] . '\', \'' . $arr['div_id'] . '\', \'' . $arr['src'] . '\', \'' . $arr['parent_query'] . '\' )">
-                    <img src="/icon/edit_empty.gif" width="16" height="16" border="0" alt="Clean" style="cursor:pointer;"  OnClick="modalFieldClear(this, \'' . $arr['field'] . '\')">
-					</div>
-					<input id="' . $arr['field'] . '" type="hidden" name="' . $arr['field_name'] . '" value="' . $arr['selected_value'] . '" onchange="' . $arr['onchange'] . '">';
-	}
-
-	/**
-	 * @param array $arr - _options
-	 * @return string
-	 */
-	public function showDiv( $arr )
-	{
-		return '<div><span id=' . $arr['div_id'] . ' style="font-weight:bold;">' . $arr['add_name'] . '&nbsp;&nbsp;</span>
-					&nbsp;
-					<img src="/icon/edit.gif" width="16" height="16" border=0 alt="List" onclick="showAjaxModWin(this, \'' . $arr['src'] . '?' . $arr['parent_query'] . '\', \'' . $title . '\', ' . ( $arr['win_width']
-				? $arr['win_width'] : '550' ) . ', ' . ( $arr['win_height'] ? $arr['win_height'] : '450' ) . ');" style="cursor:pointer;">
-					<img src="/icon/edit_empty.gif" width="16" height="16" border="0" alt="Clean" style="cursor:pointer;"  OnClick="modalFieldClear(this, \'' . $arr['field'] . '\');">
-					</div>
-					<input id="' . $arr['field'] . '" type="hidden" name="' . $arr['field_name'] . '" value="' . $arr['selected_value'] . '">';
-	}
-
-	/**
-	 * @param array $arr - _options
-	 * @return string
-	 */
-	public function showNewWindow( $arr )
-	{
-		return '<div><span id="' . $arr['div_id'] . '" style="font-weight:bold;">' . $arr['add_name'] . '&nbsp;&nbsp;</span>
-					&nbsp;
-					<img src="/icon/edit.gif" width="16" height="16" border=0 alt="List" style="cursor: pointer;" OnClick="self.focus(); save_window(\'\',\'' . $arr['action'] . '\');">
-                    <img src="/icon/edit_empty.gif" width="16" height="16" border="0" alt="Clean" style="cursor: pointer;" OnClick="document.getElementById(\'' . $arr['div_id'] . '\').innerHTML = \'' . $arr['add_name'] . '&nbsp;&nbsp;\'; document.getElementById(\'' . $arr['field'] . '\').value = \'\';self.focus();">
-					</div>
-					<input id="' . $arr['field'] . '" type="hidden" name="' . $arr['field_name'] . '" value="' . $arr['selected_value'] . '">';
-	}
-
-	/**
 	 * @param string $field_name - name of the field
 	 * @param string $value - default value for the field
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
-	public function showHidden( $field_name, $value, $arr )
+
+	public function showHiddenInput( $field_name, $value, $arr )
 	{
 		return '<input type="hidden" name="' . $field_name . '" value="' .
 		$value . '" ' .
@@ -199,10 +181,10 @@ class FormBasic
 	/**
 	 * @param string $field_name - name of the field
 	 * @param string $value - default value for the field
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
-	public function showDate( $field_name, $value, $arr = array() )
+	public function showDateInput( $field_name, $value, $arr = array() )
 	{
 		return '<span><input
             type="text"
@@ -233,7 +215,7 @@ class FormBasic
 	 * @param array $options
 	 * @return string
 	 */
-	public function showTextAutoComplete( $field_name, $value = '', $options = array() )
+	public function showAutoCompleteInput( $field_name, $value = '', $options = array() )
 	{
 		static $included = 0;
 
@@ -268,7 +250,7 @@ class FormBasic
 						: '1' ?>',
 					maxLength: '<?= isset ( $options['settings']['maxLength'] ) ? $options['settings']['maxLength']
 						: '45' ?>',
-					ac_options: <?= isset ( $options['settings'] ) ? php2js( $options['settings'] ) : 'Object()' ?>,
+					ac_options: <?= isset ( $options['settings'] ) ? Func::php2js( $options['settings'] ) : 'Object()' ?>,
 					form_id: '<?= isset ( $options['settings']['form_id'] ) ? $options['settings']['form_id']
 						: 'form_id' ?>'
 				};
@@ -297,7 +279,7 @@ class FormBasic
 
 		<? /* it's important to keep the current structure. Otherwise see jquery_clone.js REF1*/ ?>
 		<? if ( !empty( $options['title'] ) )
-	{
+		{
 		?>
 		<script language="JavaScript">
 			<!--
@@ -334,14 +316,14 @@ class FormBasic
 	 * @param string $title - title of the field
 	 * @param string $field_name - name of the field
 	 * @param string $value - default value for the field
-	 * @param array $arr - _options
+	 * @param array $arr options array
 	 * @return string
 	 */
 	public function showInline( $title, $field_name, $value, $arr = array() )
 	{
 
 		$ac_name = 'ac_' . str_replace( array( '[', ']' ), '', $field_name );
-		return $this->showTextAutoComplete( $ac_name, $arr['add_name'],
+		return $this->showAutoCompleteInput( $ac_name, $arr['add_name'],
 			array(
 				'size' => ( !empty ( $arr['size'] ) ? $arr['size'] : 20 ),
 				'maxLength' => ( !empty ( $arr['maxlength'] ) ? $arr['maxLength']

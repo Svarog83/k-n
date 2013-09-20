@@ -36,6 +36,7 @@ $AC->ajax_flag          = $ajax_flag ? true : false;
 
 $AC->user       = intval( Request::getVar( 'user_id', 0, 'session' ) );
 $AC->uid        = trim( Request::getVar( 'user_uid', '', 'session' ) );
+$AC->auth_ok    = true;
 
 $DB = AutoLoader::DB( $AC->db_settings );
 
@@ -45,15 +46,16 @@ if ( $AC->user && $AC->uid && ( $module != 'user' || $action != 'auth' ) )
 	if ( !Func::CheckUser() )
 	{
 		$AC->user = $AC->uid = '';
-		$module = '';
+		$AC->auth_ok = false;
 	}
 	else if ( !$module )
 		$module = 'first';
-
 }
+else if ( !$AC->user && ( $module != 'user' || $action != 'auth' ) )
+	$AC->auth_ok = false;
 
 $AC->module_time_start = time();
-if ( $module )
+if ( $module && $AC->auth_ok )
 {
 	if ( isset ( $AC->modules[$module] ) )
 		$AC->breadcrumb[] = $AC->modules[$module]['name'];
@@ -89,11 +91,9 @@ if ( $module )
 	}
 
 }
-
-/*if a user is not authenticated*/
-if ( !$AC->user || !$AC->uid )
+else if ( !$AC->auth_ok )
 {
-
+	/*if a user is not authenticated*/
 	new View( '../app/Resources/views/login_page.php' );
 //	$AC->_view = new View( '', array ( 'module' => 'user', 'view' => 'login_page' ) );
 	$AC->_view->render();

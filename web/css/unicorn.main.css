@@ -1326,6 +1326,13 @@ form {
     font-weight: bold;
 }
 
+.form-horizontal .sd_content label {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
 .form-horizontal input[type=text], .form-horizontal input[type=password], .form-horizontal textarea {
 	width: 80%;
 }

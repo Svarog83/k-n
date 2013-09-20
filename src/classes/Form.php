@@ -33,7 +33,7 @@ class Form extends FormBasic
 	 * @param bool $required
 	 * @return string
 	 */
-	function showBlock( $options = array(), $start = false, $title = '', $required = false )
+	function showDataBlock( $options = array(), $start = false, $title = '', $required = false )
 	{
 		ob_start();
 		if ( $start )
@@ -58,17 +58,7 @@ class Form extends FormBasic
 		return $txt;
 	}
 
-	/** Shows tr with empty breaks
-	 * @return string
-	 */
-	function insertEmptyRow()
-	{
-		echo '<tr><td><br><br></td><td></td></tr>';
-
-	}
-
-
-	/** Shows tr with a text without fields
+	/** Show some text with a hidden field
 	 * @param string $title
 	 * @param string $text
 	 * @param string $field_name
@@ -77,111 +67,80 @@ class Form extends FormBasic
 	 * @return string
 	 *
 	 */
-	function insertTextRow( $title, $text, $field_name = '', $value = '' )
+	function showHiddenBlock( $title, $text, $field_name = '', $value = '' )
 	{
-		$this->showBlock( array(), true, $title );
+		$this->showDataBlock( array(), true, $title );
 
 		echo '<b>' . $text . '</b>' . ( $field_name ? '<input type="hidden" name="' . $field_name . '" value="' . $value . '"/>' : '' );
 
-		$this->showBlock();
+		$this->showDataBlock();
 
 	}
 
-	/** Shows tr with a text field
+	/** Shows block with a text field
 	 * @param string $title
 	 * @param string $field_name
 	 * @param string $value
 	 * @param array $options
 	 * @return string
 	 */
-	public function showTextInput( $title, $field_name, $value = '', $options = array() )
+	public function showTextBlock( $title, $field_name, $value = '', $options = array() )
 	{
 		$required = isset ( $options['validation'] ) && strpos( $options['validation'], 'required' ) !== false ? true : false;
 
-		if ( !isset ( $options['size'] ) )
+		if ( empty ( $options['size'] ) )
 			$options['size'] = 50;
 
-		$txt = $this->showBlock( $options, true, $title, $required );
+		$txt = $this->showDataBlock( $options, true, $title, $required );
 
-		$txt .= $this->showText( $field_name, $value, $options );
+		$txt .= $this->showTextInput( $field_name, $value, $options );
 
-		$txt .= $this->showBlock();
+		$txt .= $this->showDataBlock();
 
 		return $txt;
 	}
 
-	/** Shows tr with a date field
+	/** Show a block with a date field
 	 * @param string $title
 	 * @param string $field_name
 	 * @param string $value
 	 * @param array $options
 	 * @return string
 	 */
-	public function showDateInput( $title, $field_name, $value = '', $options = array() )
+	public function showDateBlock( $title, $field_name, $value = '', $options = array() )
 	{
 		$required = isset ( $options['validation'] ) && strpos( $options['validation'], 'required' ) !== false ? true
 				: false;
 
-		ob_start();
+		$txt .=	$this->showDataBlock( $options, true, $title, $required );
 
-		$this->showBlock( $options, true, $title, $required );
+		$txt .= $this->showDateInput( $field_name, $value, $options );
 
-		echo $this->showDate( $field_name, $value, $options );
+		$txt .= $this->showDataBlock();
 
-		$this->showBlock();
-
-		$txt = ob_get_contents();
-		ob_end_clean();
 		return $txt;
 	}
 
-	/** Shows tr with select
+	/** Show a block with select
 	 * @param string $title
 	 * @param string $field_name
 	 * @param string $value
 	 * @param array $options
 	 * @return string
 	 */
-	public function showSelectInput( $title, $field_name, $value = '', $options = array() )
+	public function showSelectBlock( $title, $field_name, $value = '', $options = array() )
 	{
 		$required = isset ( $options['validation'] ) && strpos( $options['validation'], 'required' ) !== FALSE ? TRUE : FALSE;
-
-		$arr_tmp = array();
-
-		ob_start();
-
-		// проверяем на наличие дополнительных условий в массиве данных
-
-		if ( is_array( $options['select_values'] ) )
-		{
-			foreach ( $options['select_values'] as $k => $v )
-				if ( is_array( $v ) )
-				{
-					$arr_tmp['select_values'] = $options['select_values']['select_values'];
-					$arr_tmp['block_values'] = $options['select_values']['block_values'];
-
-
-					break;
-
-				}
-				else
-				{
-					$arr_tmp['select_values'] = $options['select_values'];
-					break;
-				}
-
-
-		}
-
-		unset( $options['select_values'] );
 
 		$arr = array( 'type' => isset ( $options['select_type'] ) ? $options['select_type'] : 'select',
 			'field_name' => $field_name,
 			'id' => isset ( $options['id'] ) ? $options['id'] : '',
-			'onchange' => 'choice_simple(\'\', \'\', \'\', this);',
+			'onchange' => '',
 			'show_select_title' => isset ( $options['show_select_title'] ) ? $options['show_select_title'] : 0,
-			'select_values' => isset ( $arr_tmp['select_values'] ) ? $arr_tmp['select_values'] : array(),
-			'block_values' => isset ( $arr_tmp['block_values'] ) ? $arr_tmp['block_values'] : array(),
+			'multiple' => isset ( $options['multiple'] ) ? $options['multiple'] : '',
+			'size' => isset ( $options['size'] ) ? $options['size'] :  ( !empty ( $options['mupltiple'] ) ? '1' : '' ),
+			'select_values' => isset ( $options['select_values'] ) ? $options['select_values'] : array(),
+			'block_values' => isset ( $options['block_values'] ) ? $options['block_values'] : array(),
 			'selected_value' => $value,
 			'add_str' => ( isset ( $options['add_str'] ) ? $options['add_str'] : '' )
 		);
@@ -189,36 +148,33 @@ class Form extends FormBasic
 		if ( !isset ( $arr['add_str'] ) )
 			$arr['add_str'] = '';
 
-		if ( $options['validation'] )
+		if ( !empty( $options['validation'] ) )
 			$arr['add_str'] .= ' class="' . $options['validation'] . '"';
 
-		$this->showBlock( $options, true, $title, $required );
+		$txt = $this->showDataBlock( $options, true, $title, $required );
 
-		echo $this->showSelect( $arr );
+		$txt .= $this->showSelectInput( $arr );
 
-		$this->showBlock();
+		$txt .= $this->showDataBlock();
 
-		$txt = ob_get_contents();
-		ob_end_clean();
 		return $txt;
 	}
 
-	/** Shows tr with checkboxes
+	/** Show a block with checkboxes
 	 * @param string $title
 	 * @param string $field_name
 	 * @param array $value
 	 * @param array $options
 	 * @return string
 	 */
-	public function showCheckBoxesInput( $title, $field_name, $value = array(), $options = array() )
+	public function showCheckBoxesBlock( $title, $field_name, $value = array(), $options = array() )
 	{
 		$required = isset ( $options['validation'] ) && strpos( $options['validation'], 'required' ) !== false ? true
 				: false;
+		$txt = '';
 
-		ob_start();
-
-		if ( !isset ( $options['no_title'] ) )
-			$this->showBlock( $options, true, $title, $required );
+		if ( empty ( $options['no_title'] ) )
+			$txt .= $this->showDataBlock( $options, true, $title, $required );
 
 		$i = 0;
 		foreach ( $options['select_values'] AS $key => $val )
@@ -227,34 +183,29 @@ class Form extends FormBasic
 			$options['checked'] = in_array( $key, $value );
 			$options['id'] = $id;
 
-			echo $this->showCheckBox( $field_name, $key, $options );
-			?>
-			<label for="<?php echo $id ?>"><?= $val ?></label>
-			<br>
-			<?
+			$txt .= '<label>' . $this->showCheckBoxInput( $field_name, $key, $options ) . $val . '</label>
+									';
 			$i++;
 		}
 
-		if ( !isset ( $options['no_title'] ) )
-			$this->showBlock();
+		if ( empty ( $options['no_title'] ) )
+			$txt .= $this->showDataBlock();
 
-		$txt = ob_get_contents();
-		ob_end_clean();
 		return $txt;
 	}
 
-	/** Shows tr with radio buttons
+	/** Show a block with radio buttons
 	 * @param string $title
 	 * @param string $field_name
 	 * @param int $value
 	 * @param array $options
 	 * @return string
 	 */
-	public function showRadioButtonInput( $title, $field_name, $value = 0, $options = array() )
+	public function showRadioBlock( $title, $field_name, $value = 0, $options = array() )
 	{
 		$required = isset ( $options['validation'] ) && strpos( $options['validation'], 'required' ) !== false ? true : false;
-		ob_start();
-		$this->showBlock( $options, true, $title, $required );
+
+		$txt = $this->showDataBlock( $options, true, $title, $required );
 
 
 		$i = 0;
@@ -268,30 +219,26 @@ class Form extends FormBasic
 			$options['checked'] = $key == $value;
 			$options['id'] = $id;
 
-			echo $this->showRadioButton( $field_name, $key, $options );
-			?>
-			<label style="vertical-align: middle; font-weight: <?= $options['checked'] ? 'bold ' : 'normal' ?>"
-			       for="<?php echo $id ?>"><?= $val ?></label>
-			<?
-			echo $split_lines ? '<br>' : '&nbsp;&nbsp;&nbsp;';
+			$txt .= '<label style="font-weight: '. ( $options['checked'] ? 'bold ' : 'normal' ) . '">' . $this->showRadioInput( $field_name, $key, $options ) . $val . '</label>
+';
+
+			//$txt .= $split_lines ? '<br>' : '&nbsp;&nbsp;&nbsp;';
 			$i++;
 		}
 
-		$this->showBlock();
+		$txt .= $this->showDataBlock();
 
-		$txt = ob_get_contents();
-		ob_end_clean();
 		return $txt;
 	}
 
-	/** Shows tr with textarea
+	/** Show a block with textarea
 	 * @param string $title
 	 * @param string $field_name
 	 * @param string $value
 	 * @param array $options
 	 * @return string
 	 */
-	public function showTextArea( $title, $field_name, $value = '', $options = array() )
+	public function showTextAreaBlock( $title, $field_name, $value = '', $options = array() )
 	{
 		$required = isset ( $options['validation'] ) && strpos( $options['validation'], 'required' ) !== false ? true
 				: false;
@@ -299,39 +246,29 @@ class Form extends FormBasic
 		if ( !isset ( $options['rows'] ) ) $options['rows'] = 12;
 		if ( !isset ( $options['cols'] ) ) $options['cols'] = 120;
 
-		ob_start();
+		$txt = $this->showDataBlock( $options, true, $title, $required );
 
-		$this->showBlock( $options, true, $title, $required );
+		$txt .= $this->showTextAreaInput( $field_name, $value, $options );
 
-		echo $this->showTextArea( $field_name, $value, $options );
-
-		$this->showBlock();
-		$txt = ob_get_contents();
-		ob_end_clean();
+		$txt .= $this->showDataBlock();
 		return $txt;
 	}
 
-	/** Shows tr with autocomplete text field
+	/** Show a block with autocomplete text field
 	 * @param string $title
 	 * @param string $field_name
 	 * @param string $value
 	 * @param array $options
 	 * @return string
 	 */
-	public function showBlockAutoComplete( $title, $field_name, $value = '', $options = array() )
+	public function showAutoCompleteBlock( $title, $field_name, $value = '', $options = array() )
 	{
 		$required = isset ( $options['validation'] ) && strpos( $options['validation'], 'required' ) !== FALSE ? TRUE : FALSE;
 
-		ob_start();
+		$txt = $this->showDataBlock( $options, true, $title, $required );
+		$txt .= $this->showAutoCompleteInput( $field_name, $value, $options );
+		$txt .= $this->showDataBlock();
 
-		$this->showBlock( $options, true, $title, $required );
-
-		echo $this->showTextAutoComplete( $field_name, $value, $options );
-
-		$this->showBlock();
-
-		$txt = ob_get_contents();
-		ob_end_clean();
 		return $txt;
 	}
 }

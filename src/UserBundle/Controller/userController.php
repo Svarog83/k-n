@@ -30,8 +30,7 @@ class userController extends SDClasses\Controller
 		}
 		else
 		{
-			AppConf::getIns()->uid = 'wrong';
-			AppConf::getIns()->user = 'bad';
+			AppConf::getIns()->auth_ok = false;
 
 			$this->render( array( 'view' => 'login_page' ), array( 'flash_message' => 'Вы ввели неправильные данные' ) );
 		}

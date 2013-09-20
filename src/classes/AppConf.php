@@ -98,6 +98,10 @@ class AppConf
 	 * @var array
 	 */
 	public $breadcrumb;
+	/**
+	 * @var
+	 */
+	public $auth_ok;
 
 	private function __construct()
 	{

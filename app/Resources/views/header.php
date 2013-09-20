@@ -7,6 +7,10 @@
 	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="/css/bootstrap-responsive.min.css"/>
 	<link rel="stylesheet" href="/css/fullcalendar.css"/>
+
+	<link rel="stylesheet" href="/css/uniform.css" />
+	<link rel="stylesheet" href="/css/select2.css" />
+
 	<link rel="stylesheet" href="/css/unicorn.main.css"/>
 	<link rel="stylesheet" href="/css/unicorn.blue.css" class="skin-color"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

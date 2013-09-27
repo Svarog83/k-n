@@ -209,9 +209,6 @@ class Form extends FormBasic
 
 
 		$i = 0;
-		$split_lines = true;
-		if ( count( $options['select_values'] ) < 3 )
-			$split_lines = false;
 
 		foreach ( $options['select_values'] AS $key => $val )
 		{
@@ -221,8 +218,6 @@ class Form extends FormBasic
 
 			$txt .= '<label style="font-weight: '. ( $options['checked'] ? 'bold ' : 'normal' ) . '">' . $this->showRadioInput( $field_name, $key, $options ) . $val . '</label>
 ';
-
-			//$txt .= $split_lines ? '<br>' : '&nbsp;&nbsp;&nbsp;';
 			$i++;
 		}
 

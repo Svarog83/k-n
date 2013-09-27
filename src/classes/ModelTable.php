@@ -1,15 +1,18 @@
 <?php
+namespace SDClasses;
 /**
  * Model class for inheritance
  */
 
 class ModelTable
 {
+	/**
+	 * @var array
+	 */
+	protected $_TableColumns = array();
+
 	/** @var array $row */
 	protected $row;
-
-	/** @var bool $_debug */
-	protected $_debug = false;
 
 	/** @var bool $_log */
 	protected $_log = false;
@@ -20,23 +23,13 @@ class ModelTable
 	/** @var string $_table_name */
 	private $_table_name;
 
-	/** @var MySQL */
+	/** @var SafeMySQL */
 	protected $DB;
 
 	public function __construct( $table_name )
 	{
-		$this->DB = AutoLoader::DB();
+		$this->DB = \AutoLoader::DB();
 		$this->_table_name = $table_name;
-	}
-
-	public function setDebug( $debug )
-	{
-		$this->_debug = $debug;
-	}
-
-	public function getDebug( )
-	{
-		return $this->_debug;
 	}
 
 	/**
@@ -92,7 +85,20 @@ class ModelTable
 
 	public function getEmpty()
 	{
-		return $this->DB->get_columns_info( $this->_table_name, false );
+		$table_name = $this->_table_name;
+		$DB = \AutoLoader::DB();
+		if ( !array_key_exists( $table_name, $this->_TableColumns ) )
+		{
+			$this->_TableColumns[$table_name] = array();
+
+			$query = "SHOW COLUMNS FROM ?n";
+			$result = $DB->query( $query, $table_name );
+
+			while ( $row = $DB->fetch( $result ) )
+				$this->_TableColumns[$table_name][$row['Field']] = '';
+		}
+
+		return $this->_TableColumns[$table_name];
 	}
 
 	/**
@@ -104,15 +110,41 @@ class ModelTable
 	 */
 	public function save( $add_creator = true, $edit_flag = false, $WhereArr = array() )
 	{
-		$this->DB->setLog( $this->_debug, $this->_log );
+		$this->DB->setLog( $this->_log );
 
+		if ( $add_creator )
+		{
+			$this->row[$this->_table_name . '_creator'] = AppConf::getIns()->user;
+			$this->row[$this->_table_name . '_create_date'] = new NoEscapeClass( 'NOW()' );
+		}
+		$this->DB->setLog( 'display' );
 		if ( !$edit_flag )
-			$this->DB->insert_arr( $this->_table_name, $this->row, $add_creator );
+		{
+			$this->DB->query( "INSERT INTO ?n SET ?u", $this->_table_name, $this->row );
+			//$this->DB->insert_arr( $this->_table_name, $this->row, $add_creator );
+		}
 		else
 			$this->DB->update_arr( $this->_table_name, $this->row, $add_creator, $WhereArr );
 
 		$this->DB->setLog();
 
-		return $this->DB->get_last_insert_id();
+		return $this->DB->insertId();
 	}
+
+	/**
+	 * @param array $TableColumns
+	 */
+	public function setTableColumns( $TableColumns )
+	{
+		$this->_TableColumns = $TableColumns;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTableColumns()
+	{
+		return $this->_TableColumns;
+	}
+
 }

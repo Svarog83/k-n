@@ -649,34 +649,3 @@ class MySQL
 		return $this->_TableColumns[$table_name];
 	}
 }
-
-/**
- * Class NoEscapeClass
- */
-class NoEscapeClass
-{
-	/**
-	 * @var string
-	 */
-	protected $_value;
-
-	/**
-	 * Constructor
-	 *
-	 * @param string $value     - значение
-	 * @return NoEscapeClass
-	 */
-	function NoEscapeClass( $value )
-	{
-		$this->_value = $value;
-	}
-
-	/**
-	 * Get _value
-	 * @return mixed
-	 */
-	function get_value()
-	{
-		return $this->_value;
-	}
-}

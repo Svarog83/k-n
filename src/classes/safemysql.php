@@ -478,7 +478,7 @@ class SafeMySQL
 		if ( $this->_log == 'file' )
 			Debugger::in_file( "QUERY: " . $this->lastQuery() . "\r\n[". $this->caller() ."]\r\n----------------\r\n" );
 		else if ( $this->_log == 'display' )
-			echo '<br>query = ' . $this->lastQuery() . '<br><br>';
+			echo '<br>query = ' . nl2br( $this->lastQuery() )    . '<br><br>';
 
 		if (!$res)
 		{
@@ -614,7 +614,7 @@ class SafeMySQL
 		$query = $comma = '';
 		foreach ($data as $key => $value)
 		{
-			$query .= $comma.$this->escapeIdent($key).'='.$this->escapeString($value);
+			$query .= $comma. "\r\n". $this->escapeIdent($key).'='. ( is_object( $value ) && get_class( $value ) == "SDClasses\\NoEscapeClass"  ? $value : $this->escapeString($value) );
 			$comma  = ",";
 		}
 		return $query;

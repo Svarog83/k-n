@@ -1,4 +1,8 @@
 <?php
+
+namespace SDClasses;
+use SDClasses\ModelTable;
+
 /**
  * Class for `user` table
  */
@@ -39,7 +43,7 @@ class User extends ModelTable
 	public static function getUserName( $user_id, $field_name = 'user_id' )
 	{
 		global $CacheUser;
-		$DB = AutoLoader::DB();
+		$DB = \AutoLoader::DB();
 
 		if ( !isset ( $CacheUser[$user_id] ) )
 		{
@@ -75,7 +79,7 @@ class User extends ModelTable
 	public function getUser ( $user_id, $user_uid, $user_activ = 'a', $user_field = 'user_id' )
 	{
 
-		$DB = AutoLoader::DB();
+		$DB = \AutoLoader::DB();
 		$user_field = ( $user_field == 'user_ida' ? $user_field : 'user_id' );
 
 		$hash_string = '';

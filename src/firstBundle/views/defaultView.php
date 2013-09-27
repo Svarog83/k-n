@@ -1,5 +1,7 @@
 <?php
 use SDClasses\AppConf;
+use SDClasses\User;
+
 /**
  * @var array $params
  */
@@ -8,7 +10,7 @@ use SDClasses\AppConf;
 	<br>
 
 	<div class="alert alert-info">
-		<strong><?= \User::getUserName( AppConf::getIns()->user ) ?></strong>, вы успешно авторизованы в
+		<strong><?= User::getUserName( AppConf::getIns()->user ) ?></strong>, вы успешно авторизованы в
 		системе.
 		<a href="#" data-dismiss="alert" class="close">×</a>
 	</div

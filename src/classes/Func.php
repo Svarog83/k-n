@@ -11,68 +11,10 @@ class Func
 	static private $_log;
 	static public  $CurAbr = array();
 
-	public static function getBrands()
-	{
-		$DB = AutoLoader::DB();
-		$DB->setDebug( self::$_debug,  self::$_log );
-
-		$arr = array();
-		$query = "SELECT * FROM brand ORDER BY brand_name";
-		$DB->query( $query, __FILE__, __LINE__ );
-		while ( $row = $DB->get_fetch_ass() )
-			$arr[$row['brand_id']] = $row['brand_name'];
-
-		$DB->setDebug();
-
-		return $arr;
-	}
-
 	public static function setDebug( $debug = false, $log = false )
 	{
 		self::$_debug   = $debug;
 		self::$_log     = $log;
-	}
-
-	public static function getCurrencies( $only_used = true )
-	{
-		$DB = AutoLoader::DB();
-		$DB->setDebug( self::$_debug,  self::$_log );
-
-		$arr = array();
-		$query = "SELECT cur_id, cur_abr FROM currency". ( $only_used ? " WHERE cur_use = 1 " : '' ) ." ORDER BY cur_abr";
-		$DB->query( $query, __FILE__, __LINE__ );
-
-		while ( $row = $DB->get_fetch_ass() )
-			$arr[ $row['cur_id'] ] = $row['cur_abr'];
-
-		$DB->setDebug();
-
-		return $arr;
-	}
-
-	public static function getCurAbr( $cur_id )
-	{
-
-		$cur_id = (int)$cur_id;
-		$cur_abr = '';
-
-		if ( !count ( self::$CurAbr ) )
-		{
-			$DB = AutoLoader::DB();
-			$DB->setDebug( self::$_debug,  self::$_log );
-
-			$query = "SELECT cur_id, cur_abr FROM currency WHERE 1";
-			$DB->query( $query, __FILE__, __LINE__ );
-			while ( $row = $DB->get_fetch_ass() )
-				self::$CurAbr[$row['cur_id']] = $row['cur_abr'];
-
-			$DB->setDebug();
-		}
-
-		if ( isset ( self::$CurAbr[$cur_id] ) )
-			$cur_abr = self::$CurAbr[$cur_id];
-
-		return $cur_abr;
 	}
 
 	public static function number2( $a )
@@ -120,11 +62,9 @@ class Func
 		$DB = \AutoLoader::DB();
 		$user = (int)AppConf::getIns()->user;
 		$uid = AppConf::getIns()->uid;
-		$query = "SELECT * FROM user WHERE user_id = '$user' AND user_uid = '" . mysql_real_escape_string( $uid ) . "'";
-		$DB->query( $query, __FILE__, __LINE__ );
 
-		$row = $DB->get_fetch_ass();
-		if ( $DB->getAffRows() == 1 && is_array( $row ) && $row['user_id'] )
+		$row = $DB->getRow( "SELECT * FROM user WHERE user_id = ?s AND user_uid = ?s", $user, $uid );
+		if ( $DB->affectedRows() == 1 && is_array( $row ) && $row['user_id'] )
 			return true;
 		else
 			return false;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1002184599">
+    <data-source source="LOCAL" name="Sochi" product="MySQL" version="5.5.31-0ubuntu0.12.10.1" jdbc-version="4.0" driver-name="MySQL-AB JDBC Driver" driver-version="mysql-connector-java-5.1.22 ( Revision: ${bzr.revision-id} )" uuid="d91aea5d-6ac5-4b9d-9352-d13f24caa103">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://mint:3306/sochi</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>dfcedfdedfc4dfc0dfd8dfc2dfdedfc9</user-password>
+      <libraries>
+        <library>
+          <url>file://$PROJECT_DIR$/../yii/connectors/mysql-connector-java-5.1.22-bin.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>
+

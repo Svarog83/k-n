@@ -104,14 +104,14 @@ class ModelTable
 	 */
 	public function save( $add_creator = true, $edit_flag = false, $WhereArr = array() )
 	{
-		$this->DB->setDebug( $this->_debug, $this->_log );
+		$this->DB->setLog( $this->_debug, $this->_log );
 
 		if ( !$edit_flag )
 			$this->DB->insert_arr( $this->_table_name, $this->row, $add_creator );
 		else
 			$this->DB->update_arr( $this->_table_name, $this->row, $add_creator, $WhereArr );
 
-		$this->DB->setDebug();
+		$this->DB->setLog();
 
 		return $this->DB->get_last_insert_id();
 	}

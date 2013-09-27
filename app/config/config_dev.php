@@ -1,11 +1,12 @@
 <?php
 
 $AC->db_settings = array (
-	'db_host'	=> 'localhost',
-	'db_name'		=> 'sochi',
-	'db_user_name'	=> 'root',
-	'db_password'	=> 'dtnjrhtc',
-	'db_port' => '3306' );
+	'host'	=> 'localhost',
+	'db'		=> 'sochi',
+	'user'	=> 'root',
+	'pass'	=> 'dtnjrhtc',
+	'port' => '3306',
+	'charset' => 'utf8' );
 
 $AC->admin_emails		=  array(
 'sergey.vetko@gmail.com'

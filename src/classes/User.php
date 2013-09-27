@@ -43,9 +43,8 @@ class User extends ModelTable
 
 		if ( !isset ( $CacheUser[$user_id] ) )
 		{
-			$query  = "SELECT * FROM user WHERE " . $field_name ." = '" . (int)$user_id ."' && user_activ NOT IN ('ch', 'del')";
-			$DB->query( $query, __FILE__, __LINE__ );
-			$row = $DB->get_fetch_ass();
+			$query  = "SELECT * FROM user WHERE ?n = ?i && user_activ NOT IN ('ch', 'del')";
+			$row = $DB->getRow( $query, $field_name, $user_id );
 
 			$CacheUser[$user_id] = $row;
 		}
@@ -75,17 +74,17 @@ class User extends ModelTable
 	 */
 	public function getUser ( $user_id, $user_uid, $user_activ = 'a', $user_field = 'user_id' )
 	{
-		$user_id = (int)$user_id;
+
+		$DB = AutoLoader::DB();
 		$user_field = ( $user_field == 'user_ida' ? $user_field : 'user_id' );
-		$user_uid = mysql_real_escape_string( $user_uid );
 
 		$hash_string = '';
 		if ( $user_uid )
-			$hash_string = "AND user_hash = '$user_uid'";
-			
-		$query = "SELECT * FROM user WHERE $user_field = '$user_id' $hash_string AND user_activ = '$user_activ'";
-		$this->DB->query( $query, __FILE__, __LINE__ );
-		$row = $this->DB->get_fetch_ass();
+			$hash_string =  $DB->parse("AND user_hash = ?s", $user_uid);
+
+		$query = "SELECT * FROM user WHERE ?n = ?i ?p AND user_activ = ?s";
+		$row = $DB->getRow( $query, $user_field, $user_id, $hash_string, $user_activ );
+
 		$this->setRow( $row );
 	}
 }

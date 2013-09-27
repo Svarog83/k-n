@@ -14,22 +14,20 @@ class AutoLoader
 	 */
     public static function DB( $config = array(), $action = "connect" )
     {
-	    /**@var MySQL */
+	    /**@var \SDClasses\SafeMySQL */
 	    static $DB;
 
 	    if ( $action == 'connect')
 	    {
 		    if( !$DB  )
-				$DB       = new MySQL( $config );
+				$DB       = new \SDClasses\SafeMySQL( $config );
 	    }
 	    else if ( $action == 'reconnect' )
 	    {
-		    $DB->disconnect();
-		    $DB = new MySQL( $config );
+		    $DB = new \SDClasses\SafeMySQL( $config );
 	    }
 	    else if ( $action == 'disconnect' )
 	    {
-		    $DB->disconnect();
 		    unset ( $DB );
 	    }
 
@@ -89,6 +87,7 @@ class AutoLoader
 	    else
 	    {
 		    //if we need to load all classes of the specified Bundle
+		    if ( file_exists( AppConf::getIns()->root_path . '/src/' . $className . '/' . $className . '.php' ) )
 		    include_once ( AppConf::getIns()->root_path . '/src/' . $className . '/' . $className . '.php' );
 		    $conrollers = glob ( AppConf::getIns()->root_path . '/src/' . $className . '/Controller/*Controller.php' );
 		    foreach ( $conrollers AS $conroller )

@@ -1,8 +1,9 @@
 <?php
 
 $AC->db_settings = array (
-	'db_host'	=> 'localhost',
-	'db_name'	=> 'sochi_real',
-	'db_user_name'	=> 'real',
-	'db_password'	=> 'real',
-	'db_port' => '3306' );
+	'host'	=> 'localhost',
+	'db'	=> 'sochi_real',
+	'user'	=> 'real',
+	'pass'	=> 'real',
+	'port' => '3306',
+	'charset' => 'utf8' );

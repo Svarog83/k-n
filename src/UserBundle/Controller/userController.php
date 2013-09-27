@@ -12,19 +12,14 @@ class userController extends SDClasses\Controller
 		$password = isset ( $_REQUEST['form_password'] ) ? sha1( $_REQUEST['form_password'] ) : '';
 
 		$DB = \AutoLoader::DB();
-		$DB->setDebug( false, true );
-		$query = "SELECT * FROM user WHERE user_login = '$login' AND user_pass = '$password'";
-		$DB->query( $query, __FILE__, __LINE__ );
+		$row = $DB->getRow( "SELECT * FROM user WHERE user_login = ?s AND user_pass = ?s", $login, $password );
 
-		$DB->setDebug();
-		$row = $DB->get_fetch_ass();
-
-		if ( $DB->getAffRows() == 1 && is_array( $row ) && $row['user_id'] )
+		if ( $DB->affectedRows() == 1 && is_array( $row ) && $row['user_id'] )
 		{
 			$_SESSION['user_id'] = $row['user_id'];
 			$_SESSION['user_uid'] = $uid = sha1( $row['user_id'] . microtime() . AppConf::getIns()->secret_salt );
-			$query = "UPDATE user SET user_uid = '$uid' WHERE user_id = '{$row['user_id']}' AND user_activ = 'a'";
-			$DB->query( $query, __FILE__, __LINE__ );
+
+			$DB->query( "UPDATE user SET user_uid = '$uid' WHERE user_id = ?s AND user_activ = 'a'", $row['user_id'] );
 
 			$this->redirect( '/first' );
 		}

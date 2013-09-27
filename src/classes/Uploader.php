@@ -454,20 +454,19 @@ var UploadFilters     = <?= php2js( $this->filters ); ?>;
 		$query = "
 			SELECT
 				d.*,
-				DAY( d.`docs_date` ) as day,
-				MONTH( d.`docs_date` ) as month,
-				YEAR( d.`docs_date` ) as year
-			FROM `docs` d
+				DAY( d.docs_date ) as day,
+				MONTH( d.docs_date ) as month,
+				YEAR( d.docs_date ) as year
+			FROM docs d
 			WHERE
-			    d.`docs_activ` = 'a' &&
-			    d.`docs_mod`   = '". $module ."' &&
-			    d.`docs_link_id`  = '". $docs_link_id ."'
+			    d.docs_activ = 'a' &&
+			    d.docs_mod   = ?s &&
+			    d.docs_link_id  = ?s
 			ORDER BY
-			    d.`docs_ext`,d.`docs_title`
+			    d.docs_ext,d.docs_title
 		";
-	    $oResult = $DB->query( $query, __FILE__, __LINE__ );
-		while ( $row = $DB->get_fetch_ass() )
-			$DocsArr[] = $row;
+
+		$DocsArr = $DB->getAll( $query, $module, $docs_link_id );
 
 		return $DocsArr;
 	}

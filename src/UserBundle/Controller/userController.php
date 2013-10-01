@@ -3,6 +3,8 @@
 namespace SDClasses\userBundle\Controller;
 use SDClasses;
 use SDClasses\AppConf;
+use SDClasses\NoEscapeClass;
+use SDClasses\User;
 
 class userController extends SDClasses\Controller
 {
@@ -35,7 +37,7 @@ class userController extends SDClasses\Controller
 	{
 //		$this->render( array ( 'module' => 'first', 'view' => 'default' ), array () );
 
-		$user = new \User( AppConf::getIns()->user );
+		$user = new User( AppConf::getIns()->user );
 
 		if ( $user->getExist() )
 			$this->render( array( 'module' => 'user', 'view' => 'profile' ), array( 'user' => $user ) );
@@ -47,7 +49,7 @@ class userController extends SDClasses\Controller
 	{
 		//		$this->render( array ( 'module' => 'first', 'view' => 'default' ), array () );
 
-		$user = new \User( AppConf::getIns()->user );
+		$user = new User( AppConf::getIns()->user );
 
 		if ( $user->getExist() )
 			$this->render( array( 'module' => 'user', 'view' => 'settings' ), array( 'user' => $user ) );
@@ -59,7 +61,7 @@ class userController extends SDClasses\Controller
 	{
 		//		$this->render( array ( 'module' => 'first', 'view' => 'default' ), array () );
 
-		$user = new \User( AppConf::getIns()->user );
+		$user = new User( AppConf::getIns()->user );
 
 		if ( $user->getExist() )
 			$this->render( array( 'module' => 'user', 'view' => 'edit_profile' ), array( 'user' => $user ) );
@@ -71,7 +73,30 @@ class userController extends SDClasses\Controller
 	{
 		//		$this->render( array ( 'module' => 'first', 'view' => 'default' ), array () );
 
-		?><pre><?= print_r( $_REQUEST ) ?></pre><?
+		$user = new User( AppConf::getIns()->user );
+		$fields = $user->getEmpty();
+
+		if ( $user->getExist() )
+		{
+			$row = $user->getRow();
+
+			$w = array();
+			$w[] = $DB = \AutoLoader::DB()->parse("user_id = ?s", $row['user_id'] );
+
+			unset ( $row['user_ida'] );
+			$row['user_id'] = new NoEscapeClass( "( SELECT if ( max(user_id)  IS NULL, 1, max(user_id) + 1 ) AS c FROM ( SELECT user_id FROM user ) AS t1 )" );
+
+			$row['user_login'] = $_REQUEST['form_login'];
+			$row['user_email'] = $_REQUEST['form_email'];
+			$row['user_uid'] = $row['user_pass'] = '';
+			$user->setRow( $row );
+
+			$id = $user->save( true, true, $w );
+			echo 'all ok, id = ' . $id;
+
+		}
+		else
+			$this->Error404( 'Пользователь не найден' );
 	}
 
 	public function exitAction()

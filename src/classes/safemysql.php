@@ -139,7 +139,15 @@ class SafeMySQL
 	 */
 	public function query()
 	{
-		return $this->rawQuery($this->prepareQuery(func_get_args()));
+		if ( $this->_log != 'display_only' )
+			return $this->rawQuery($this->prepareQuery(func_get_args()));
+		else
+		{
+			echo nl2br ( $this->prepareQuery(func_get_args()) );
+			return false;
+		}
+
+
 	}
 
 	/**

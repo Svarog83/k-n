@@ -87,6 +87,7 @@ class User extends ModelTable
 			$hash_string =  $DB->parse("AND user_hash = ?s", $user_uid);
 
 		$query = "SELECT * FROM user WHERE ?n = ?i ?p AND user_activ = ?s";
+//		$DB->setLog( ('display' ) );
 		$row = $DB->getRow( $query, $user_field, $user_id, $hash_string, $user_activ );
 
 		$this->setRow( $row );

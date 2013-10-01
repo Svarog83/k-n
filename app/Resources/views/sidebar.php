@@ -48,10 +48,12 @@ use SDClasses\AppConf;
 	<div id="breadcrumb">
 		<a href="/" title="Главная" class="tip-bottom"><i class="icon-home"></i> Главная</a>
 		<?php if ( AppConf::getIns()->route->getModule() != '' && is_array ( AppConf::getIns()->breadcrumb ) ): ?>
-			<?php foreach ( AppConf::getIns()->breadcrumb AS $bread )
+			<?php
+			$count = count ( AppConf::getIns()->breadcrumb ) - 1;
+			foreach ( AppConf::getIns()->breadcrumb AS $k => $bread )
 			{
 				?>
-				<a href="#" class="current"><?= $bread ?></a>
+				<a href="#" <?= $k == $count ? 'class="current"' : ''?>><?= $bread ?></a>
 			<? } ?>
 		<? endif; ?>
 	</div>

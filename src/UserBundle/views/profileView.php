@@ -1,7 +1,7 @@
 <?php
 
 use SDClasses\AppConf;
-use \User;
+use SDClasses\User;
 
 /**
  * @var array $params

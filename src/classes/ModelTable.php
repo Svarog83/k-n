@@ -105,26 +105,36 @@ class ModelTable
 	 * Saves a record into database
 	 * @param bool $add_creator - flasg, shows if creator and create_date fields needs to be added
 	 * @param bool $edit_flag - Flag, shows that record will be edited
-	 * @param array $WhereArr - An array with conditions for editing a record
+	 * @param array $where - An array of prepared (via $db->parse) conditions.
 	 * @return int - return ID of inserted record
 	 */
-	public function save( $add_creator = true, $edit_flag = false, $WhereArr = array() )
+	public function save( $add_creator = true, $edit_flag = false, $where = array() )
 	{
 		$this->DB->setLog( $this->_log );
 
-		if ( $add_creator )
+		if ( $add_creator && !$edit_flag )
 		{
 			$this->row[$this->_table_name . '_creator'] = AppConf::getIns()->user;
 			$this->row[$this->_table_name . '_create_date'] = new NoEscapeClass( 'NOW()' );
 		}
-		$this->DB->setLog( 'display' );
+
+		if ( $add_creator && $edit_flag )
+		{
+			$arr[$this->_table_name . '_changer'] = AppConf::getIns()->user;
+			$arr[$this->_table_name . '_change_date'] = new NoEscapeClass( 'NOW()' );
+		}
+
+		$this->DB->setLog( 'display_only' );
 		if ( !$edit_flag )
 		{
 			$this->DB->query( "INSERT INTO ?n SET ?u", $this->_table_name, $this->row );
-			//$this->DB->insert_arr( $this->_table_name, $this->row, $add_creator );
 		}
 		else
-			$this->DB->update_arr( $this->_table_name, $this->row, $add_creator, $WhereArr );
+		{
+			$this->DB->query( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, $this->row );
+		}
+
+//		$this->DB->update_arr( $this->_table_name, $this->row, $add_creator, $where );
 
 		$this->DB->setLog();
 

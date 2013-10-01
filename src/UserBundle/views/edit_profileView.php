@@ -2,7 +2,7 @@
 
 use SDClasses\AppConf;
 use SDClasses\Form;
-use \User;
+use SDClasses\User;
 
 /**
  * @var array $params
@@ -35,15 +35,17 @@ $row = $user->getRow();
 				</div>
 
 				<div class="widget-content form-horizontal">
-					<form action="/user/save_profile" method="get" class="form-horizontal">
+					<form action="/user/save_profile" method="POST" class="form-horizontal">
+						<input type="hidden" name="user_id" value="<?= $row['user_id']?>">
 						<?= $this->showEntry( 'ID', $row['user_id'] ); ?>
-						<?= $form->showTextBlock( 'Имя', 'form_name', User::showUserName( $row ), array( 'validation' => 'required' ) ); ?>
-						<?= $form->showTextBlock( 'Логин', 'form_login', $row['user_login'] ); ?>
+						<?= $form->showTextBlock( 'Имя', 'form_name', $row['user_name_rus'], array( 'validation' => 'required' ) ); ?>
+						<?= $form->showTextBlock( 'Фамилия', 'form_surname', $row['user_fam_rus'], array( 'validation' => 'required' ) ); ?>
+						<?= $form->showTextBlock( 'Логин', 'form_login', $row['user_login'], array( 'validation' => 'required' ) ); ?>
 						<?= $form->showTextBlock( 'E-mail', 'form_email', $row['user_email'], array( 'help_block' => 'Проверьте внимательно!' ) ); ?>
 
-						<?= $form->showTextBlock( 'Новый пароль', 'form_pass_new', '', array( 'placeholder' => 'New placeholder' ) ); ?>
+						<?= $form->showTextBlock( 'Новый пароль', 'form_pass_new', '', array( 'placeholder' => 'Введите пароль, если хотите его изменить' ) ); ?>
 
-						<?= $form->showSelectBlock( "Пол", 'form_sex', '', array( 'multiple' => false, "validation" => 'required', 'show_select_title' => "Выберите пол", 'select_values' => array( 'm' => 'Male', 'f' => 'Female' ) ) ); ?>
+						<?= $form->showSelectBlock( "Пол", 'form_sex', '', array( 'multiple' => false, "validation" => 'required', 'show_select_title' => "Выберите пол", 'select_values' => array( 'm' => 'Мужской', 'f' => 'Женский' ) ) ); ?>
 
 						<?= $form->showTextAreaBlock( "О себе", 'form_about' ); ?>
 

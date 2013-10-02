@@ -86,6 +86,6 @@ class Controller
 
 	public function Error404( $text )
 	{
-		$this->render( array ( 'view' => 'content' ), array ( 'text' => $text . '<br><a href="#" onclick="history.back();">Вернуться назад</a>', 'class' => 'alert-error' ) );
+		$this->render( array ( 'view' => 'content' ), array ( 'text' => $text . '<br><a href="javascript: return false;" onclick="history.back();">Вернуться назад</a>', 'class' => 'alert-error' ) );
 	}
 }

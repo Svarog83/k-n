@@ -12,5 +12,14 @@ ALTER TABLE `user`
 ADD `user_email` varchar(100) COLLATE 'utf8_general_ci' NOT NULL AFTER `user_pass`,
 COMMENT=''; -- 0.024 s
 
+ALTER TABLE  `user` ADD `user_creator` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of user who created the record [table:user, field:user_id]';
+ALTER TABLE  `user` ADD `user_create_date` DATETIME NULL COMMENT  'Date when the user was created';
+ALTER TABLE  `user` ADD `user_changer` int(11) NOT NULL DEFAULT '0' COMMENT 'ID of user who changed the record [table:user, field: user_id]';
+ALTER TABLE  `user` ADD `user_change_date` DATETIME NULL COMMENT 'Date when the user was edited';
+ALTER TABLE  `user` ADD `user_hash` varchar(10) NOT NULL DEFAULT '' COMMENT 'User hash code';
+ALTER TABLE  `user` ADD `user_sex` char(1) NOT NULL DEFAULT '' COMMENT 'User''s sex' AFTER user_login;
+ALTER TABLE `user` ADD `user_blocked` tinyint(1) unsigned NOT NULL COMMENT 'Flag, shows if a user is blocked' AFTER `user_activ`,
+COMMENT=''; -- 0.008 s
+
 ########################################################################################
 ########################################################################################

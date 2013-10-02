@@ -23,12 +23,8 @@ class ModelTable
 	/** @var string $_table_name */
 	private $_table_name;
 
-	/** @var SafeMySQL */
-	protected $DB;
-
 	public function __construct( $table_name )
 	{
-		$this->DB = \AutoLoader::DB();
 		$this->_table_name = $table_name;
 	}
 
@@ -111,9 +107,11 @@ class ModelTable
 	 */
 	public function save( $add_creator = true, $edit_flag = false, $where = array(), $hist_record = true )
 	{
-		$this->DB->setLog( $this->_log );
+		$DB = \AutoLoader::DB();
 
-//		$this->DB->setLog( 'display' );
+		$DB->setLog( $this->_log );
+
+//		$DB->setLog( 'display' );
 
 		$arr_creator = $arr_changer = array();
 
@@ -125,7 +123,7 @@ class ModelTable
 
 		if ( !$edit_flag )
 		{
-			$this->DB->query( "INSERT INTO ?n SET ?u", $this->_table_name, array_merge ( $this->row, $arr_creator ) );
+			$DB->query( "INSERT INTO ?n SET ?u", $this->_table_name, array_merge ( $this->row, $arr_creator ) );
 		}
 		else
 		{
@@ -137,33 +135,28 @@ class ModelTable
 
 			if ( !count ( $where ) )
 			{
-				$where[] = $this->DB->parse($this->_table_name . "_id = ?s AND " . $this->_table_name . "_activ='a'", $this->row[$this->_table_name . '_id'] );
+				$where[] = $DB->parse($this->_table_name . "_id = ?s AND " . $this->_table_name . "_activ='a'", $this->row[$this->_table_name . '_id'] );
 			}
 
 			$query_arr = array();
 			if ( !$hist_record )
 			{
-				$this->DB->query( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, array_merge ( $this->row, $arr_changer )  );
+				$DB->query( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, array_merge ( $this->row, $arr_changer )  );
 			}
 			else
 			{
 				$arr_changer[$this->_table_name . '_activ'] = 'ch';
-				$query_arr[] = $this->DB->parse( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, $arr_changer );
+				$query_arr[] = $DB->parse( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, $arr_changer );
 
-				$query_arr[] = $this->DB->parse( "INSERT INTO ?n SET ?u", $this->_table_name, array_merge ( $this->row, $arr_creator ) );
+				$query_arr[] = $DB->parse( "INSERT INTO ?n SET ?u", $this->_table_name, array_merge ( $this->row, $arr_creator ) );
 
-				$this->DB->queryTransaction( $query_arr );
+				$DB->queryTransaction( $query_arr );
 
 			}
-
-			/*$this->DB->query( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, $this->row );*/
 		}
+		$DB->setLog();
 
-//		$this->DB->update_arr( $this->_table_name, $this->row, $add_creator, $where );
-
-		$this->DB->setLog();
-
-		return $this->DB->insertId();
+		return $DB->insertId();
 	}
 
 	/**

@@ -12,11 +12,17 @@
 <!--scripts for forms-->
 <script src="/js/jquery.uniform.js"></script>
 <script src="/js/select2.min.js"></script>
-<script src="/js/unicorn.form_common.js"></script>
+<script src="/js/plugins/sd.form_common.js"></script>
 <script src="/js/functions/jquery_clone.js"></script>
 
 <!--Growl-like notifications-->
 <script src="/js/jquery.gritter.min.js"></script>
+
+
+<!--Tables-->
+<script src="/js/plugins/sd.tables.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+
 
 </body>
 </html>

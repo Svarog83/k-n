@@ -14,7 +14,7 @@ class userController extends SDClasses\Controller
 		$password = isset ( $_REQUEST['form_password'] ) ? sha1( $_REQUEST['form_password'] ) : '';
 
 		$DB = \AutoLoader::DB();
-		$row = $DB->getRow( "SELECT * FROM user WHERE user_login = ?s AND user_pass = ?s", $login, $password );
+		$row = $DB->getRow( "SELECT * FROM user WHERE user_login = ?s AND user_pass = ?s AND user_activ='a'", $login, $password );
 
 		if ( $DB->affectedRows() == 1 && is_array( $row ) && $row['user_id'] )
 		{
@@ -74,25 +74,24 @@ class userController extends SDClasses\Controller
 		//		$this->render( array ( 'module' => 'first', 'view' => 'default' ), array () );
 
 		$user = new User( AppConf::getIns()->user );
-		$fields = $user->getEmpty();
 
 		if ( $user->getExist() )
 		{
 			$row = $user->getRow();
 
-			$w = array();
-			$w[] = $DB = \AutoLoader::DB()->parse("user_id = ?s", $row['user_id'] );
+			unset ( $row['user_ida'], $row['user_changer'], $row['user_change_date'] );
 
-			unset ( $row['user_ida'] );
-			$row['user_id'] = new NoEscapeClass( "( SELECT if ( max(user_id)  IS NULL, 1, max(user_id) + 1 ) AS c FROM ( SELECT user_id FROM user ) AS t1 )" );
+			/*Enable only when we want to add a new record*/
+			//$row['user_id'] = new NoEscapeClass( "( SELECT if ( max(user_id)  IS NULL, 1, max(user_id) + 1 ) AS c FROM ( SELECT user_id FROM user ) AS t1 )" );
 
+			$row['user_name_rus'] = $_REQUEST['form_name'];
+			$row['user_fam_rus'] = $_REQUEST['form_surname'];
 			$row['user_login'] = $_REQUEST['form_login'];
 			$row['user_email'] = $_REQUEST['form_email'];
-			$row['user_uid'] = $row['user_pass'] = '';
 			$user->setRow( $row );
+			$user->save( true, true, array(), false );
 
-			$id = $user->save( true, true, $w );
-			echo 'all ok, id = ' . $id;
+			$this->render( array( 'module' => 'user', 'view' => 'profile' ), array( 'flash_message' => 'Ваши данные сохранены успешно', 'user' => $user ) );
 
 		}
 		else
@@ -106,4 +105,83 @@ class userController extends SDClasses\Controller
 
 		$this->redirect( '/' );
 	}
+
+	public function defaultAction()
+	{
+		$this->profileAction();
+	}
+
+	public function newAction()
+	{
+		$user = new User( '' );
+		$this->render( array( 'module' => 'user', 'view' => 'new' ), array( 'user' => $user ) );
+	}
+
+	public function editAction()
+	{
+		$user_id = isset ( AppConf::getIns()->route->getParams()[0] ) ? AppConf::getIns()->route->getParams()[0] : '';
+
+		$user = new User( $user_id );
+
+		if ( $user->getExist() )
+		{
+			$this->render( array( 'module' => 'user', 'view' => 'new' ), array( 'user' => $user ) );
+		}
+		else
+			$this->Error404( 'Пользователь не найден' );
+	}
+
+	public function saveAction()
+	{
+		$user_id = isset ( $_REQUEST['form_user_id'] ) ? $_REQUEST['form_user_id'] : '';
+		$user = new User( $user_id );
+		$edit_flag = $user->getExist() ? true : false;
+
+		$row = $user->getRow();
+
+		if ( $edit_flag )
+			unset ( $row['user_ida'], $row['user_changer'], $row['user_change_date'] );
+		else
+		{
+			$row['user_activ'] = 'a';
+			$row['user_id'] = new NoEscapeClass( "( SELECT if ( max(user_id)  IS NULL, 1, max(user_id) + 1 ) AS c FROM ( SELECT user_id FROM user ) AS t1 )" );
+		}
+
+		$row['user_name_rus'] = $_REQUEST['form_name'];
+		$row['user_fam_rus'] = $_REQUEST['form_surname'];
+		$row['user_login'] = $_REQUEST['form_login'];
+		$row['user_email'] = $_REQUEST['form_email'];
+		$row['user_pass'] = sha1 ( $_REQUEST['form_pass'] );
+		$row['user_sex'] = $_REQUEST['form_sex'];
+		$row['user_blocked'] = $_REQUEST['form_blocked'];
+
+		$user->setRow( $row );
+
+		$insert_id = $user->save( true, $edit_flag, array(), false );
+
+		if ( !$edit_flag && $insert_id )
+		{
+			$user = new User ( $insert_id, '', 'a', 'user_ida' );
+		}
+
+		$this->render( array( 'module' => 'user', 'view' => 'profile' ), array( 'flash_message' => 'Ваши данные сохранены успешно', 'user' => $user ) );
+	}
+
+	public function listAction( $flash_mesage = '' )
+	{
+		$DB = \AutoLoader::DB();
+		$UsersArr = $DB->getAll( "SELECT * FROM user WHERE user_activ='a' ORDER BY user_fam_rus" );
+		$this->render( array( 'module' => 'user', 'view' => 'list' ), array( "users" => $UsersArr, 'flash_message' => $flash_mesage) );
+	}
+
+	public function deleteAction()
+	{
+		$user_id = isset ( AppConf::getIns()->route->getParams()[0] ) ? AppConf::getIns()->route->getParams()[0] : 0;
+		$DB = \AutoLoader::DB();
+		$DB->query( "DELETE FROM user WHERE user_id = ?i", $user_id );
+
+		$this->listAction( 'Пользователь удален' );
+
+	}
+
 }

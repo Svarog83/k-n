@@ -32,6 +32,9 @@ $AC->route = new Router( $_SERVER['REQUEST_URI'] );
 $module = $AC->route->getModule();
 $action = $AC->route->getAction();
 
+if ( $module == 'user' && $action == 'auth' )
+	unset ( $_SESSION['user_id'], $_SESSION['user_uid'] );
+
 $ajax_flag              = (int)Request::getVar( 'ajax_flag', 0 );
 $AC->ajax_flag          = $ajax_flag ? true : false;
 

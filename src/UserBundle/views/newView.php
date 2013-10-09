@@ -48,7 +48,7 @@ $row = $user->getRow();
 
 						<?= $form->showTextBlock( 'Пароль', 'form_pass', '', array( 'placeholder' => 'Введите пароль' ) ); ?>
 
-						<?= $form->showSelectBlock( "Пол", 'form_sex', '', array( 'multiple' => false, "validation" => 'required', 'show_select_title' => "Выберите пол", 'select_values' => array( 'm' => 'Мужской', 'f' => 'Женский' ) ) ); ?>
+						<?= $form->showSelectBlock( "Пол", 'form_sex', $row['user_sex'], array( 'multiple' => false, "validation" => 'required', 'show_select_title' => "Выберите пол", 'select_values' => array( 'm' => 'Мужской', 'f' => 'Женский' ) ) ); ?>
 
 						<?= $form->showRadioBlock( "Заблокирован?", 'form_blocked', $row['user_blocked'], array( 'id' => "form_blocked_id", 'select_values' => array( "0" => 'Нет', '1' => 'Да' ) ) ); ?>
 

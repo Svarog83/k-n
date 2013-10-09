@@ -68,14 +68,10 @@ class AutoLoader
 	        if( include_once( $className.'.php' ) )
 	            return;
 
-		    //Маски возможных имен файла
 	        $file_formats = array(
-	          '%s.class.php',
-	          '%s.inc.php',
 	          '%s.php'
 	        );
 
-	        // Если не удалось сразу подключить файл, то пытаемся подключить по имени из шаблона
 	        foreach( $file_formats as $file_format )
 	        {
 	            $path = sprintf( $file_format, $className );
@@ -88,7 +84,8 @@ class AutoLoader
 	    {
 		    //if we need to load all classes of the specified Bundle
 		    if ( file_exists( AppConf::getIns()->root_path . '/src/' . $className . '/' . $className . '.php' ) )
-		    include_once ( AppConf::getIns()->root_path . '/src/' . $className . '/' . $className . '.php' );
+		        include_once ( AppConf::getIns()->root_path . '/src/' . $className . '/' . $className . '.php' );
+
 		    $conrollers = glob ( AppConf::getIns()->root_path . '/src/' . $className . '/Controller/*Controller.php' );
 		    foreach ( $conrollers AS $conroller )
 			    include_once ( $conroller );
@@ -104,11 +101,6 @@ function __autoload( $class_name )
 
 if( function_exists('date_default_timezone_set') )
     date_default_timezone_set( 'Europe/Moscow' );
-
-function query_error( $file_name, $line, $query )
-{
-	AppConf::query_error ( $file_name, $line, $query );
-}
 
 function our_error_handler( $errno, $errstr, $errfile, $errline, $vars )
 {

@@ -25,7 +25,7 @@ $AC->menu = array(
 		"job" => array(
 			'name' => 'Поставка',
 			'path' => '/job',
-			'class' => 'icon icon-th-list',
+			'class' => 'icon icon-time',
 			'active' => false,
 			'submenu' => array(
 				"job_list" => array(
@@ -70,7 +70,7 @@ $AC->menu = array(
 		"contr" => array(
 			'name' => 'Контракт',
 			'path' => '/contr',
-			'class' => 'icon icon-th-list',
+			'class' => 'icon icon-briefcase',
 			'submenu' => array(
 				"contr_list" => array(
 					'name' => 'Список',
@@ -84,6 +84,36 @@ $AC->menu = array(
 				),
 			),
 		),
+
+		"user" => array(
+			'name' => 'Пользователи',
+			'path' => '/user',
+			'class' => 'icon icon-user',
+			'submenu' => array(
+				"user_new" => array(
+					'name' => 'Новый',
+					'path' => '/user/new',
+					'class' => '',
+				),
+				"user_list" => array(
+					'name' => 'Список',
+					'path' => '/user/list',
+					'class' => '',
+				),
+				"user_settings" => array(
+									'name' => 'Настройки',
+									'path' => '/user/settings',
+									'class' => '',
+								),
+				"user_profile" => array(
+									'name' => 'Профиль',
+									'path' => '/user/profile',
+									'class' => '',
+								),
+
+			),
+		),
+
 		"chart" => array(
 			'name' => 'Графики',
 			'path' => '/chart',

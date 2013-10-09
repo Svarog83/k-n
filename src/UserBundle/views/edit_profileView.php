@@ -34,6 +34,10 @@ $row = $user->getRow();
 					</div>
 				</div>
 
+				<?php if ( !empty( $params['flash_message'] ) ): ?>
+				<span style="color: red; font-weight: bold;"><?php echo $params['flash_message'] ?></span>
+                <? endif; ?>
+
 				<div class="widget-content form-horizontal">
 					<form action="/user/save_profile" method="POST" class="form-horizontal">
 						<input type="hidden" name="user_id" value="<?= $row['user_id']?>">

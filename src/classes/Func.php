@@ -63,7 +63,7 @@ class Func
 		$user = (int)AppConf::getIns()->user;
 		$uid = AppConf::getIns()->uid;
 
-		$row = $DB->getRow( "SELECT * FROM user WHERE user_id = ?s AND user_uid = ?s", $user, $uid );
+		$row = $DB->getRow( "SELECT * FROM user WHERE user_id = ?s AND user_uid = ?s AND user_activ='a'", $user, $uid );
 		if ( $DB->affectedRows() == 1 && is_array( $row ) && $row['user_id'] )
 			return true;
 		else

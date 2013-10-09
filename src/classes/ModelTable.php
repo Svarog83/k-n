@@ -23,12 +23,8 @@ class ModelTable
 	/** @var string $_table_name */
 	private $_table_name;
 
-	/** @var SafeMySQL */
-	protected $DB;
-
 	public function __construct( $table_name )
 	{
-		$this->DB = \AutoLoader::DB();
 		$this->_table_name = $table_name;
 	}
 
@@ -106,39 +102,61 @@ class ModelTable
 	 * @param bool $add_creator - flasg, shows if creator and create_date fields needs to be added
 	 * @param bool $edit_flag - Flag, shows that record will be edited
 	 * @param array $where - An array of prepared (via $db->parse) conditions.
+	 * @param bool $hist_record - flag, shows if we need to insert a new record and set as 'ch' the old one
 	 * @return int - return ID of inserted record
 	 */
-	public function save( $add_creator = true, $edit_flag = false, $where = array() )
+	public function save( $add_creator = true, $edit_flag = false, $where = array(), $hist_record = true )
 	{
-		$this->DB->setLog( $this->_log );
+		$DB = \AutoLoader::DB();
 
-		if ( $add_creator && !$edit_flag )
+		$DB->setLog( $this->_log );
+
+//		$DB->setLog( 'display' );
+
+		$arr_creator = $arr_changer = array();
+
+		if ( $add_creator )
 		{
-			$this->row[$this->_table_name . '_creator'] = AppConf::getIns()->user;
-			$this->row[$this->_table_name . '_create_date'] = new NoEscapeClass( 'NOW()' );
+			$arr_creator[$this->_table_name . '_creator'] = AppConf::getIns()->user;
+			$arr_creator[$this->_table_name . '_create_date'] = new NoEscapeClass( 'NOW()' );
 		}
 
-		if ( $add_creator && $edit_flag )
-		{
-			$arr[$this->_table_name . '_changer'] = AppConf::getIns()->user;
-			$arr[$this->_table_name . '_change_date'] = new NoEscapeClass( 'NOW()' );
-		}
-
-		$this->DB->setLog( 'display_only' );
 		if ( !$edit_flag )
 		{
-			$this->DB->query( "INSERT INTO ?n SET ?u", $this->_table_name, $this->row );
+			$DB->query( "INSERT INTO ?n SET ?u", $this->_table_name, array_merge ( $this->row, $arr_creator ) );
 		}
 		else
 		{
-			$this->DB->query( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, $this->row );
+			if ( $add_creator )
+			{
+				$arr_changer[$this->_table_name . '_changer'] = AppConf::getIns()->user;
+				$arr_changer[$this->_table_name . '_change_date'] = new NoEscapeClass( 'NOW()' );
+			}
+
+			if ( !count ( $where ) )
+			{
+				$where[] = $DB->parse($this->_table_name . "_id = ?s AND " . $this->_table_name . "_activ='a'", $this->row[$this->_table_name . '_id'] );
+			}
+
+			$query_arr = array();
+			if ( !$hist_record )
+			{
+				$DB->query( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, array_merge ( $this->row, $arr_changer )  );
+			}
+			else
+			{
+				$arr_changer[$this->_table_name . '_activ'] = 'ch';
+				$query_arr[] = $DB->parse( "UPDATE ?n SET ?u WHERE " . implode(' AND ', $where), $this->_table_name, $arr_changer );
+
+				$query_arr[] = $DB->parse( "INSERT INTO ?n SET ?u", $this->_table_name, array_merge ( $this->row, $arr_creator ) );
+
+				$DB->queryTransaction( $query_arr );
+
+			}
 		}
+		$DB->setLog();
 
-//		$this->DB->update_arr( $this->_table_name, $this->row, $add_creator, $where );
-
-		$this->DB->setLog();
-
-		return $this->DB->insertId();
+		return $DB->insertId();
 	}
 
 	/**

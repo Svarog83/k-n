@@ -13,6 +13,11 @@
 
 	<link rel="stylesheet" href="/css/unicorn.main.css"/>
 	<link rel="stylesheet" href="/css/unicorn.blue.css" class="skin-color"/>
+
+	<link rel="stylesheet" href="/css/jquery.gritter.css" />
+
+	<script src="/js/jquery.min.js"></script>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
 <body>

@@ -67,6 +67,10 @@ if ( $module && $AC->auth_ok )
 			$AC->breadcrumb[] = 'Редактирование';
 		else if ( strpos ( $action, 'show' ) !== false )
 			$AC->breadcrumb[] = 'Просмотр';
+		else if ( strpos ( $action, 'new' ) !== false )
+			$AC->breadcrumb[] = 'Создание';
+		else if ( strpos ( $action, 'edit' ) !== false )
+			$AC->breadcrumb[] = 'Редактирование';
 		else if ( strpos ( $action, 'list' ) !== false )
 			$AC->breadcrumb[] = 'Листинг';
 		else if ( strpos ( $action, 'save' ) !== false )

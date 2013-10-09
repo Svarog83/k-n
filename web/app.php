@@ -20,6 +20,7 @@ if ( ( isset ( $_SERVER['SERVER_ADDR'] ) && strpos ( $_SERVER['SERVER_ADDR'], '1
 {
     $AC->dev_server		= TRUE;
 	require ( $AC->root_path . '/app/config/config_dev.php' );
+	require ( '../vendor/kint/kint-bundle/Kint.class.php');
 }
 else
 {

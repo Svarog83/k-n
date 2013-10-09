@@ -14,6 +14,7 @@ class userController extends SDClasses\Controller
 		$password = isset ( $_REQUEST['form_password'] ) ? sha1( $_REQUEST['form_password'] ) : '';
 
 		$DB = \AutoLoader::DB();
+
 		$row = $DB->getRow( "SELECT * FROM user WHERE user_login = ?s AND user_pass = ?s", $login, $password );
 
 		if ( $DB->affectedRows() == 1 && is_array( $row ) && $row['user_id'] )

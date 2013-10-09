@@ -35,9 +35,14 @@ class userController extends SDClasses\Controller
 
 	public function profileAction()
 	{
-//		$this->render( array ( 'module' => 'first', 'view' => 'default' ), array () );
+		$this->showAction();
+	}
 
-		$user = new User( AppConf::getIns()->user );
+	public function showAction()
+	{
+		$user_id = isset ( AppConf::getIns()->route->getParams()[0] ) ? AppConf::getIns()->route->getParams()[0] : AppConf::getIns()->user;
+
+		$user = new User( $user_id );
 
 		if ( $user->getExist() )
 			$this->render( array( 'module' => 'user', 'view' => 'profile' ), array( 'user' => $user ) );
@@ -170,7 +175,7 @@ class userController extends SDClasses\Controller
 	public function listAction( $flash_mesage = '' )
 	{
 		$DB = \AutoLoader::DB();
-		$UsersArr = $DB->getAll( "SELECT * FROM user WHERE user_activ='a' ORDER BY user_fam_rus" );
+		$UsersArr = $DB->getAll( "SELECT * FROM user WHERE user_activ!='ch' ORDER BY user_fam_rus" );
 		$this->render( array( 'module' => 'user', 'view' => 'list' ), array( "users" => $UsersArr, 'flash_message' => $flash_mesage) );
 	}
 
@@ -178,9 +183,19 @@ class userController extends SDClasses\Controller
 	{
 		$user_id = isset ( AppConf::getIns()->route->getParams()[0] ) ? AppConf::getIns()->route->getParams()[0] : 0;
 		$DB = \AutoLoader::DB();
-		$DB->query( "DELETE FROM user WHERE user_id = ?i", $user_id );
+		$DB->query( "UPDATE user SET user_activ= 'd' WHERE user_id = ?i AND user_activ = 'a'", $user_id );
 
 		$this->listAction( 'Пользователь удален' );
+
+	}
+
+	public function activateAction()
+	{
+		$user_id = isset ( AppConf::getIns()->route->getParams()[0] ) ? AppConf::getIns()->route->getParams()[0] : 0;
+		$DB = \AutoLoader::DB();
+		$DB->query( "UPDATE user SET user_activ= 'a' WHERE user_id = ?i AND user_activ='d'", $user_id );
+
+		$this->listAction( 'Пользователь восстановлен' );
 
 	}
 

@@ -7,7 +7,6 @@ use SDClasses\User;
  * @param array $UsersArr
  */
 $UsersArr = $params['users'];
-
 /**
  * @var array $params
  * @var User $user
@@ -23,6 +22,8 @@ $UsersArr = $params['users'];
 				<table class="table table-striped table-bordered data-table">
 					<thead>
 					<tr>
+						<th>&nbsp;</th>
+						<th>ID</th>
 						<th>Имя</th>
 						<th>Логин</th>
 						<th>E-mail</th>
@@ -36,17 +37,28 @@ $UsersArr = $params['users'];
 					{
 						?>
 						<tr>
+							<td class="taskOptions">
+								<a href="/user/show/<?= $row['user_id'] ?>" class="tip-top"
+								   data-original-title="Просмотр"><i class="icon-search"></i></a>
+							</td>
+							<td><?= $row['user_id'] ?></td>
 							<td><?= User::showUserName( $row ) ?></td>
 							<td><?= $row['user_login'] ?></td>
 							<td><?= $row['user_email'] ?></td>
 							<td><?= $row['user_sex'] ?></td>
-							<td><?= $row['user_blocked'] ? 'Заблокирован' : 'Активен' ?></td>
+							<td><?= $row['user_activ'] == 'd' ? 'Удален' : ( $row['user_blocked'] ? 'Заблокирован' : 'Активен' ) ?></td>
 
 							<td class="taskOptions">
-								<a href="/user/edit/<?= $row['user_id']?>" class="tip-top" data-original-title="Редактировать"><i
-											class="icon-edit"></i></a>
-								<a href="/user/delete/<?= $row['user_id']?>" class="tip-top"
-								   data-original-title="Удалить"><i class="icon-remove"></i></a>
+								<? if ( $row['user_activ'] == 'a' ): ?>
+									<a href="/user/edit/<?= $row['user_id'] ?>" class="tip-top"
+									   data-original-title="Редактировать"><i
+												class="icon-edit"></i></a>
+									<a href="/user/delete/<?= $row['user_id'] ?>" class="tip-top"
+									   data-original-title="Удалить"><i class="icon-remove"></i></a>
+								<? else: ?>
+									<a href="/user/activate/<?= $row['user_id'] ?>" class="tip-top"
+									   data-original-title="Восстановить"><i class="icon-ok"></i></a>
+								<? endif; ?>
 							</td>
 
 						</tr>
@@ -95,15 +107,15 @@ $UsersArr = $params['users'];
 
 <script type="text/javascript">
 	<!--
-	$(document).ready(function()
+	$( document ).ready( function ()
 	{
 
 		<?php if ( !empty( $params['flash_message'] ) ): ?>
-			$.gritter.add({
-				title:	'',
-				text:	'<?= $params['flash_message'] ?>',
-				sticky: true
-			});
+		$.gritter.add( {
+			title: '',
+			text: '<?= $params['flash_message'] ?>',
+			sticky: true
+		} );
 		<? endif;?>
 	} );
 	//-->

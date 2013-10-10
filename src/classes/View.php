@@ -122,6 +122,9 @@ class View
 		ob_start();
 		?>
 		<button <?= !empty ( $options['id'] ) ? 'id="' . $options['id'] . '"' : '' ?>
+				<?= !empty ( $options['onclick'] ) ? 'onclick="' . $options['onclick'] . '"' : '' ?>
+				<?= !empty ( $options['title'] ) ? 'title="' . $options['title'] . '"' : '' ?>
+				<?= !empty ( $options['disabled'] ) ? 'disabled="disabled"' : '' ?>
 				class="btn <?= $class ?>">
 			<i class="<?= $icon ?> icon-white"></i> <?= $heading ?>
 		</button>

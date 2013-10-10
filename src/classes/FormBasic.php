@@ -33,6 +33,9 @@ class FormBasic
 	 */
 	public function showTextInput( $field_name, $value, $arr = array() )
 	{
+		/*if ( !empty ( $arr['size'] ) && empty ( $arr['add_str'] ) )
+			$arr['add_str'] = 'style="width: ' . $arr['size'] . 'px;"';*/
+
 		return '<input
             type="' . ( !empty( $arr['password'] ) ? 'password' : 'text' ) . '"
             name="' . $field_name . '"

@@ -250,8 +250,14 @@ REMS
 			$admin_flag         = AppConf::getIns()->admin_flag;
 			$ajax_flag          = AppConf::getIns()->ajax_flag;
 
-			$trace_arr = debug_backtrace(  );
-	        $trace_str = Func::parseDebugTrace( $trace_arr, false );
+
+			if ( $local_server )
+				$trace_str = '';
+			else
+			{
+				$trace_arr = debug_backtrace(  );
+	            $trace_str = Func::parseDebugTrace( $trace_arr, false );
+			}
 
 			$error_text =  '<br><span style="color:red;"><b>PHP Error</b>:</span><br>
 Description: '.$errstr.'
@@ -263,6 +269,7 @@ trace stack: <b>' . nl2br ( $trace_str ) .	'</b><br>
 			if( !$ajax_flag && ( $admin_flag || $local_server ) )
 			{
 				echo $error_text;
+				\Kint::trace();
 			}
 
 			else if ( $ajax_flag )

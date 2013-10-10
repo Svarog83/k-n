@@ -2,6 +2,7 @@
 
 use SDClasses\AppConf;
 use SDClasses\Form;
+use SDClasses\FormElement;
 use SDClasses\User;
 
 /**
@@ -9,15 +10,33 @@ use SDClasses\User;
  * @var User $user
  * @var SDClasses\View $this
  */
-$form = new Form( $this );
+$form = new Form(
+array( 'form_id' => 'form_id', 'module' => 'comp', 'action' => 'save', 'need_confirm' => false, 'upload_exist' => false )
+);
 
-$options_arr = $form->SaveFormOptions( 'form_id', 'comp', 'save', array( 'need_confirm' => false,
-	'upload_exist' => false
-) );
-$options_arr['show_close'] = false;
-$form->SaveForm( $options_arr );
+$FormElements = array();
 
-/*
+$FormElements[] = new FormElement( 'hidden', '', 'comp_id', '' );
+$FormElements[] = new FormElement( 'text', 'Название', 'comp_name', '', array ( 'size' => '50' ) );
+$FormElements[] = new FormElement( 'radio', 'Зарубежная?', 'comp_foreign', '', array( 'id' => "form_foreign_id", 'select_values' => array( "0" => 'Нет', '1' => 'Да' ) ) );
+$FormElements[] = new FormElement( 'checkbox', 'Департаменты', 'comp_dep', array(), array( 'select_values' => array( "1" => 'Таможня', '2' => 'Логистика', '3' => 'Бухгалтерия' ) ) );
+$FormElements[] = new FormElement( 'select', 'Тип компании', 'comp_type', '', array( 'multiple' => false, "validation" => 'required', 'show_select_title' => "Выберите тип", 'select_values' => array( 'b' => 'Брокер', 'c' => 'Заказчик', 't' => 'Перевозчик' ) ) );
+
+$FormElements[] = new FormElement( 'radio', 'Is activated?', 'comp_blocked', '', array( 'id' => "form_foreign_id", 'select_values' => array( "0" => 'No', '1' => 'Yes' ) ) );
+
+$FormElements[] = new FormElement( 'empty', ' ', '', '' );
+
+$FormElements[] = new FormElement( 'textarea', 'Banking account', 'comp_account', '', array( ) );
+$FormElements[] = new FormElement( 'text', 'VAT Number', 'comp_vat', '', array( ) );
+$FormElements[] = new FormElement( 'textarea', 'Address', 'comp_address', '', array( ) );
+
+$FormElements[] = new FormElement( 'empty', ' ', '', '' );
+
+$FormElements[] = new FormElement( 'text', 'General manager name', 'comp_manager_name', '', array( ) );
+$FormElements[] = new FormElement( 'text', 'Official e-mail', 'comp_email', '', array( ) );
+$FormElements[] = new FormElement( 'text', 'Phone number', 'comp_phone', '', array( ) );
+
+?>
 
 <div class="container-fluid">
 
@@ -29,42 +48,24 @@ $form->SaveForm( $options_arr );
 										<span class="icon">
 											<i class="icon-user"></i>
 										</span>
-					<? if ( !$user->getExist() ): ?>
-						<h5>Создание пользователя</h5>
+					<? if ( true ): ?>
+						<h5>Создание компании</h5>
 					<? else: ?>
-						<h5>Редактирование пользователя</h5>
+						<h5>Редактирование компании</h5>
 					<? endif; ?>
 
 					<div class="buttons">
-						<a title="К списку пользователей" class="btn btn-mini" href="/user/list"><i
+						<a title="К списку пользователей" class="btn btn-mini" href="/comp/list"><i
 									class="icon-user"></i>
-							Список пользователей</a>
+							Список компаний</a>
 					</div>
 				</div>
 
-				<div class="widget-content form-horizontal">
-					<form action="/user/save" method="POST" class="form-horizontal">
-						<input type="hidden" name="form_user_id" value="<?= $row['user_id'] ?>">
-						<?= $form->showTextBlock( 'Имя', 'form_name', $row['user_name_rus'], array( 'validation' => 'required' ) ); ?>
-						<?= $form->showTextBlock( 'Фамилия', 'form_surname', $row['user_fam_rus'], array( 'validation' => 'required' ) ); ?>
-						<?= $form->showTextBlock( 'Логин', 'form_login', $row['user_login'], array( 'validation' => 'required' ) ); ?>
-						<?= $form->showTextBlock( 'E-mail', 'form_email', $row['user_email'], array( 'validation' => 'required', 'help_block' => 'Проверьте внимательно!' ) ); ?>
+			<? $form->showForm( $this, $FormElements ); ?>
 
-						<?= $form->showTextBlock( 'Пароль', 'form_pass', '', array( 'placeholder' => 'Введите пароль' ) ); ?>
-
-						<?= $form->showSelectBlock( "Пол", 'form_sex', $row['user_sex'], array( 'multiple' => false, "validation" => 'required', 'show_select_title' => "Выберите пол", 'select_values' => array( 'm' => 'Мужской', 'f' => 'Женский' ) ) ); ?>
-
-						<?= $form->showRadioBlock( "Заблокирован?", 'form_blocked', $row['user_blocked'], array( 'id' => "form_blocked_id", 'select_values' => array( "0" => 'Нет', '1' => 'Да' ) ) ); ?>
-
-						<div class="form-actions">
-							<?= $this->showButton( 'Сохранить', 'btn-success', 'icon-ok', array( 'submit' => true ) ) ?>
-						</div>
-					</form>
-				</div>
 			</div>
 
 		</div>
 
 	</div>
 </div>
-*/

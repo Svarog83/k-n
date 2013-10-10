@@ -1,8 +1,6 @@
 <?php
 
-namespace userBundle
+namespace SDClasses\userBundle;
+class userBundle
 {
-	class userBundle
-	{
-	}
 }

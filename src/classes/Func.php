@@ -8,7 +8,10 @@ use SDClasses\AppConf;
  */
 class Func
 {
-	static private $_log;
+	/**
+	 * @var bool
+	 */
+	static private $_log = false;
 
 	public static function setLog( $log = false )
 	{
@@ -65,7 +68,12 @@ class Func
 		return $new_date;
 	}
 
-	function assetLink( $type, $name, $path = '' )
+	/**
+	 * @param $type
+	 * @param $name
+	 * @param string $path
+	 */
+	public static function assetLink( $type, $name, $path = '' )
 	{
 		$out_str = '';
 		$web_root = AppConf::getIns()->root_path . '/web';
@@ -151,17 +159,17 @@ class Func
 		$result = array();
 		if ( $isList )
 		{
-			foreach ( $a as $v ) $result[] = php2js( $v );
+			foreach ( $a as $v ) $result[] = self::php2js( $v );
 			return '[ ' . join( ', ', $result ) . ' ]';
 		}
 		else
 		{
-			foreach ( $a as $k => $v ) $result[] = php2js( $k ) . ': ' . php2js( $v );
+			foreach ( $a as $k => $v ) $result[] = self::php2js( $k ) . ': ' . self::php2js( $v );
 			return '{ ' . join( ', ', $result ) . ' }';
 		}
 	}
 
-	function sendMail( $to, $subject, $mess, $headers = '' )
+	public static function sendMail( $to, $subject, $mess, $headers = '' )
 	{
 		$send_email_option = AppConf::getIns()->send_email_option;
 
